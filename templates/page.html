@@ -1,0 +1,10 @@
+{% extends "global.html" %}
+
+{% block content %}
+<div class="section title">
+    {{ page.title | safe }}
+</div>
+<div class="section">
+    {{ page.content | safe }}
+</div>
+{% endblock content %}

@@ -1,0 +1,21 @@
+base_url = "https://davidkoloski.me"
+
+title = "David Koloski"
+description = "Software Engineer, Game Designer, Web Developer"
+
+highlight_code = true
+highlight_theme = "inspired-github"
+
+generate_rss = true
+
+taxonomies = [
+    {name = "categories", rss = true},
+    {name = "tags"}
+]
+
+compile_sass = true
+
+build_search_index = true
+
+[extra]
+author = { name = "David Koloski" }

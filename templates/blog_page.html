@@ -1,0 +1,28 @@
+{% extends "global.html" %}
+
+{% block content %}
+<div class="section title">
+    {{ page.title | safe }}
+</div>
+<div class="section taxonomies">
+    {% for key, values in page.taxonomies %}
+        <div class="{{ key }}">
+            {% for value in values %}
+                <a href="/{{ key }}/{{ value | slugify }}">{{ value | title }}</a>{% if not loop.last %},{% endif %}
+            {% endfor %}
+        </div>
+    {% endfor %}
+</div>
+<div class="section">
+    <p>Posted {{ page.date }}</p>
+    {{ page.content | safe }}
+</div>
+<div class="section navigation">
+    {% if page.earlier %}
+        Previous article: {{ page.earlier.permalink }}
+    {% endif %}
+    {% if page.later %}
+        Next article: {{ page.later.permalink }}
+    {% endif %}
+</div>
+{% endblock content %}

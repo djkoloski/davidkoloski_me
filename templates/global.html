@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="{{ config.description }}">
+    <meta name="author" content="{{ config.extra.author.name }}">
+
+    <!-- favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#000000">
+    <meta name="theme-color" content="#ffffff">
+
+    <!-- fonts and styles -->
+    <link href="https://fonts.googleapis.com/css?family=Rubik:400,700" rel="stylesheet">
+    <link href="{{ config.base_url }}/style.css" rel="stylesheet">
+
+    <title>
+        {% if section and section.title %}
+            {{ section.title }}
+        {% elif page and page.title %}
+            {{ page.title }}
+        {% else %}
+            {{ config.title }}
+        {% endif %}
+    </title>
+</head>
+<body>
+    <div class="section header">
+        <div class="left">
+            <a href="/" class="logo" width="100"></a>
+        </div>
+        <div class="right">
+            {% set root_section = get_section(path="_index.md") %}
+            {% for page in root_section.pages %}
+                <a href="/{{ page.path }}">{{ page.title }}</a>
+            {% endfor %}
+            {% for subsection_path in root_section.subsections %}
+                {% set subsection = get_section(path=subsection_path) %}
+                <a href="/{{ subsection.path }}">{{ subsection.title }}</a>
+            {% endfor %}
+        </div>
+    </div>
+    {% block content %}
+    {% endblock content %}
+    <div class="section footer">
+        &copy; {{ now() | date(format="%Y") }} {{ config.extra.author.name }}
+    </div>
+</body>
+</html>

@@ -1,0 +1,199 @@
+/* Generic styles */
+
+$max-width: 1400px;
+$font-stack: 'Rubik', serif;
+$white: #fff;
+$black: #000;
+$gray: #c0c0c0;
+$blue: #0989B2;
+$red: #ff0046;
+$yellow: #ffef19;
+
+html {
+    font: {
+        family: $font-stack;
+        size: 1em;
+    }
+}
+
+body {
+    margin: 0;
+}
+
+a {
+    display: inline-block;
+    text-decoration: none;
+    border-bottom-style: solid;
+    border-bottom-width: 0.15em;
+    color: $blue;
+}
+
+pre {
+    border: 2px solid $gray;
+    padding: 1rem;
+}
+
+.section {
+    padding-right: calc((100% - #{$max-width}) / 2 + 1rem);
+    padding-left: calc((100% - #{$max-width}) / 2 + 1rem);
+}
+
+@media screen and (max-width: $max-width) {
+    .section {
+        padding-right: 1rem;
+        padding-left: 1rem;
+    }
+}
+
+.citation {
+    border-bottom: 0;
+    vertical-align: super;
+    font-size: 0.8em;
+}
+
+.citation::before {
+    content: "[";
+}
+
+.citation::after {
+    content: "]";
+}
+
+* > .footnote::before {
+    content: " ";
+    display: block;
+    width: 100%;
+    height: 2px;
+    background-color: $gray;
+    margin: {
+        top: 1rem;
+        bottom: 1rem;
+    }
+}
+
+* > .footnote ~ .footnote::before {
+    content: "";
+    display: none;
+}
+
+.footnote a {
+    border-bottom: 0;
+    text-align: right;
+    min-width: 1.5em;
+    position: relative;
+    margin-right: 0.5rem;
+}
+
+.footnote a::after {
+    content: ".";
+}
+
+/* Global */
+.logo {
+    display: block;
+    overflow: hidden;
+    width: 48px;
+    height: 26.304px;
+    background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='UTF-8'%3F%3E%3Csvg width='25.4mm' height='13.924mm' version='1.1' viewBox='0 0 25.4 13.92365' xmlns='http://www.w3.org/2000/svg' xmlns:cc='http://creativecommons.org/ns%23' xmlns:dc='http://purl.org/dc/elements/1.1/' xmlns:rdf='http://www.w3.org/1999/02/22-rdf-syntax-ns%23'%3E%3Cmetadata%3E%3Crdf:RDF%3E%3Ccc:Work rdf:about=''%3E%3Cdc:format%3Eimage/svg+xml%3C/dc:format%3E%3Cdc:type rdf:resource='http://purl.org/dc/dcmitype/StillImage'/%3E%3Cdc:title/%3E%3C/cc:Work%3E%3C/rdf:RDF%3E%3C/metadata%3E%3Cg transform='translate(0 -283.08)'%3E%3Cpath d='m22.613 283.08c-0.7117 0-1.4232 0.27299-1.9685 0.81841l-1.2589 1.2589c-0.31388-1.1941-1.3856-2.0746-2.6809-2.0746-1.5424 0-2.7842 1.2419-2.7842 2.7842v8.3526c0 1.5424 1.2418 2.7842 2.7842 2.7842 1.2956 0 2.37-0.88009 2.6836-2.0745l1.2562 1.2561c1.0907 1.0907 2.8464 1.0907 3.937 0 1.0907-1.0904 1.0907-2.8463 0-3.937l-2.2051-2.2051 2.2051-2.2077c1.0907-1.0907 1.0907-2.8464 0-3.937-0.54534-0.54542-1.2568-0.81841-1.9685-0.81841zm-19.133 3e-3c-1.9221-3.6e-4 -3.4803 1.5578-3.4803 3.4799v6.9605c0 1.9221 1.5582 3.4802 3.4803 3.4802h2.0882c3.8442 0 6.9605-3.1164 6.9605-6.9605 0-3.8441-3.1163-6.9605-6.9605-6.9605z' fill='%23fff'/%3E%3C/g%3E%3C/svg%3E%0A");
+    background-size: cover;
+    border-bottom: 0;
+    padding: 0;
+}
+
+$header-foreground: $white;
+$header-background: $black;
+
+.section.header {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    background-color: $header-background;
+    color: $header-foreground;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    position: sticky;
+}
+
+.section.header .left {
+    grid-area: 1 / 1 / 1 / 2;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+}
+
+.section.header .right {
+    grid-area: 1 / 2 / 1 / 3;
+    display: flex;
+    align-items: center;
+    justify-content: right;
+}
+
+.section.header .right a {
+    color: $header-foreground;
+    padding: 0;
+    border: 0;
+    margin: {
+        right: 0.5em;
+        left: 0.5em;
+    }
+}
+
+.section.footer {
+    background-color: $black;
+    color: $white;
+    text-align: center;
+    padding: {
+        top: 1rem;
+        bottom: 1rem;
+    }
+}
+
+/* Page */
+.section.title {
+    background: $red;
+    color: $white;
+    font-size: 4rem;
+    padding: {
+        top: 1rem;
+        bottom: 1rem;
+    }
+}
+
+.section.posted-date {
+    margin: {
+        top: 0.5rem;
+        bottom: 0.5rem;
+    }
+}
+
+/* Blog page */
+.section.taxonomies {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: $blue;
+    color: $white;
+    padding: {
+        top: 0.5rem;
+        bottom: 0.5rem;
+    }
+}
+
+.section.taxonomies a {
+    color: $white;
+}
+
+.section.taxonomies .tags {
+    grid-area: 1 / 1 / 1 / 2;
+}
+
+.section.taxonomies .tags::before {
+    content: "Tags:";
+}
+
+.section.taxonomies .categories {
+    grid-area: 1 / 2 / 1 / 3;
+    text-align: right;
+}
+
+.section.taxonomies .categories::before {
+    content: "Categories:";
+}
