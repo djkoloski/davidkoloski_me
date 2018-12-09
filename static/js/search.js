@@ -24,6 +24,8 @@ class SearchBox {
         this.resultsNode = document.createElement('div')
         this.resultsNode.id = 'search-results'
         this.inputNode.parentNode.insertBefore(this.resultsNode, this.inputNode.nextSibling)
+
+        this.update()
     }
 
     update() {
