@@ -21,6 +21,15 @@ body {
     margin: 0;
 }
 
+@media print {
+    html {
+        font-size: 0.8em;
+    }
+    body {
+        line-height: 1.2;
+    }
+}
+
 a {
     text-decoration: none;
     border-bottom-style: solid;
@@ -149,6 +158,15 @@ $header-background: $black;
     padding: {
         top: 1rem;
         bottom: 1rem;
+    }
+}
+
+@media only print {
+    .section.header {
+        display: none;
+    }
+    .section.footer {
+        display: none;
     }
 }
 
