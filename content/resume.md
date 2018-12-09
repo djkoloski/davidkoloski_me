@@ -1,6 +1,7 @@
 +++
 title = "Resume"
 weight = 1
+in_search_index = false
 +++
 
 # Experience

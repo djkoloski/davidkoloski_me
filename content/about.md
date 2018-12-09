@@ -1,6 +1,7 @@
 +++
 title = "About"
 weight = 0
+in_search_index = false
 +++
 
 <img src="/img/self-image.jpg" class="self-image" alt="David Koloski">
