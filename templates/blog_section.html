@@ -1,0 +1,24 @@
+{% extends "global.html" %}
+
+{% block content %}
+<div class="section title">
+    {{ section.title | safe }}
+</div>
+<div class="section pages">
+    {{ section.content | safe }}
+
+    {% for page in section.pages %}
+    <div class="page">
+        <a href="/{{ page.path | safe }}">{{ page.title }}</a>
+        <div class="posted-date">
+            {{ page.date | date(format="%B %e, %Y") }}
+        </div>
+    </div>
+    {% endfor %}
+    {% for sub in section.subsections %}
+    {% set subsection = get_section(path=sub) %}
+    {{ subsection.title }}
+    {{ subsection.pages | length }}
+    {% endfor %}
+</div>
+{% endblock content %}

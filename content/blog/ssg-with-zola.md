@@ -5,12 +5,12 @@ slug = "ssg-with-zola"
 date = 2018-12-02
 [taxonomies]
 categories = ["web development"]
-tags = ["zola", "static site generation"]
+tags = ["zola", "rust", "static site generation"]
 +++
 
 # I'm a big fan of Rust
 
-And so are a lot of other people. There's a lot to love about the language, build system, and packages available. But what really brings it home is the community around the language and how they approach programming. In general, the Rust community seems to strike a good balance between purity and pragmatism. Maybe it's because of what the language was built to do, or maybe it's a copy and paste of Mozilla internal culture, but either way it means that Rust makes really good *tools*. You might have heard of [ripgrep](https://github.com/BurntSushi/ripgrep), but you probably haven't heard of [Zola](https://www.getzola.org/).
+And so are a lot of other people. There's a lot to love about the language, build system, and packages available. But what really brings it home is the community around the language and how they approach programming. In general, the Rust community seems to strike a good balance between purity and pragmatism. Maybe it's because of what the language was built to do, or maybe it's a copy and paste of Mozilla internal culture, but either way it means that Rust makes really good tools. You might have heard of [ripgrep](https://github.com/BurntSushi/ripgrep), but you probably haven't heard of [Zola](https://www.getzola.org/).
 
 [Zola](https://www.getzola.org/) is a small static site generator that was originally called Gutenberg and is written in Rust. Its key features are:
 

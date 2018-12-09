@@ -18,7 +18,7 @@
 
     <!-- fonts and styles -->
     <link href="https://fonts.googleapis.com/css?family=Rubik:400,700" rel="stylesheet">
-    <link href="{{ config.base_url }}/style.css" rel="stylesheet">
+    <link href="{{ config.base_url | safe }}/style.css" rel="stylesheet">
 
     <title>
         {% if section and section.title %}
@@ -38,11 +38,11 @@
         <div class="right">
             {% set root_section = get_section(path="_index.md") %}
             {% for page in root_section.pages %}
-                <a href="/{{ page.path }}">{{ page.title }}</a>
+            <a href="/{{ page.path | safe }}">{{ page.title }}</a>
             {% endfor %}
             {% for subsection_path in root_section.subsections %}
-                {% set subsection = get_section(path=subsection_path) %}
-                <a href="/{{ subsection.path }}">{{ subsection.title }}</a>
+            {% set subsection = get_section(path=subsection_path) %}
+            <a href="/{{ subsection.path | safe }}">{{ subsection.title }}</a>
             {% endfor %}
         </div>
     </div>

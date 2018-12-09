@@ -3,18 +3,20 @@
 {% block content %}
 <div class="section title">
     {{ page.title | safe }}
+    <div class="posted-date">
+        {{ page.date | date(format="%B %e, %Y") }}
+    </div>
 </div>
 <div class="section taxonomies">
     {% for key, values in page.taxonomies %}
-        <div class="{{ key }}">
-            {% for value in values %}
-                <a href="/{{ key }}/{{ value | slugify }}">{{ value | title }}</a>{% if not loop.last %},{% endif %}
-            {% endfor %}
-        </div>
+    <div class="{{ key }}">
+        {% for value in values %}
+        <a href="{{ get_taxonomy_url(kind=key, name=value) }}">{{ value | title }}</a>{% if not loop.last %},{% endif %}
+        {% endfor %}
+    </div>
     {% endfor %}
 </div>
-<div class="section">
-    <p>Posted {{ page.date }}</p>
+<div class="section content">
     {{ page.content | safe }}
 </div>
 <div class="section navigation">
