@@ -16,9 +16,9 @@
     </div>
     {% endfor %}
     {% for sub in section.subsections %}
-    {% set subsection = get_section(path=sub) %}
-    {{ subsection.title }}
-    {{ subsection.pages | length }}
+        {% set subsection = get_section(path=sub) %}
+        {{ subsection.title }}
+        {{ subsection.pages | length }}
     {% endfor %}
 </div>
 {% endblock content %}

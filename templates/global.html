@@ -20,6 +20,11 @@
     <link href="https://fonts.googleapis.com/css?family=Rubik:400,700" rel="stylesheet">
     <link href="{{ config.base_url | safe }}/style.css" rel="stylesheet">
 
+    <!-- scripts -->
+    <script src="/elasticlunr.min.js" async></script>
+    <script src="/search_index.en.js" async></script>
+    <script src="/js/search.js" async></script>
+
     <title>
         {% if section and section.title %}
             {{ section.title }}
@@ -32,18 +37,23 @@
 </head>
 <body>
     <div class="section header">
-        <div class="left">
-            <a href="/" class="logo" width="100"></a>
+        <div class="logo">
+            <a href="/" class="logo-image" width="100"></a>
         </div>
-        <div class="right">
+        <div class="links">
             {% set root_section = get_section(path="_index.md") %}
             {% for page in root_section.pages %}
-            <a href="/{{ page.path | safe }}">{{ page.title }}</a>
+                <a href="/{{ page.path | safe }}">{{ page.title }}</a>
             {% endfor %}
             {% for subsection_path in root_section.subsections %}
-            {% set subsection = get_section(path=subsection_path) %}
-            <a href="/{{ subsection.path | safe }}">{{ subsection.title }}</a>
+                {% set subsection = get_section(path=subsection_path) %}
+                <a href="/{{ subsection.path | safe }}">{{ subsection.title }}</a>
             {% endfor %}
+        </div>
+        <div class="search">
+            <input id="search-checkbox" type="checkbox" autocomplete="off">
+            <input id="search-input" type="text">
+            <label id="search-show" for="search-checkbox"></label>
         </div>
     </div>
     {% block content %}

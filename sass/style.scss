@@ -104,7 +104,7 @@ pre {
 }
 
 /* Global */
-.logo {
+.logo-image {
     display: block;
     overflow: hidden;
     width: 48px;
@@ -120,28 +120,124 @@ $header-background: $black;
 
 .section.header {
     display: grid;
-    grid-template-columns: auto 1fr;
+    grid-template-columns: auto 1fr auto;
     background-color: $header-background;
     color: $header-foreground;
     padding-top: 1rem;
     padding-bottom: 1rem;
 }
 
-.section.header .left {
+.section.header > * {
+    display: flex;
+    align-items: center;
+}
+
+.section.header .logo {
     grid-area: 1 / 1 / 1 / 2;
-    display: flex;
-    align-items: center;
     justify-content: left;
+    margin-right: 1rem;
 }
 
-.section.header .right {
+@media only page and (min-width: 768px) {
+    .section.header .logo {
+        margin-right: 2rem;
+    }
+}
+
+.section.header .search {
+    grid-area: 1 / 3 / 1 / 4;
+    position: relative;
+}
+
+.section.header .search #search-input {
+    background: $black;
+    border: 0;
+    border-bottom: 2px solid $white;
+    color: $white;
+    font: {
+        family: $font-stack;
+        size: 1rem;
+    }
+    width: 10em;
+}
+
+.section.header .search #search-input ~ #search-results {
+    visibility: hidden;
+}
+
+.section.header .search #search-input:focus ~ #search-results,
+.section.header .search #search-input ~ #search-results:hover {
+    visibility: visible;
+}
+
+@media only screen and (max-width: 480px) {
+    .section.header .search #search-input {
+        display: none;
+        position: absolute;
+        right: 42px;
+        width: calc(100vw - 140px);
+    }
+
+    .section.header .search #search-checkbox:checked ~ #search-input {
+        display: block;
+    }
+}
+
+.section.header .search #search-checkbox {
+    display: none;
+}
+
+.section.header .search #search-show {
+    display: inline-block;
+    overflow: hidden;
+    width: 18.002px;
+    height: 18px;
+    background-color: transparent;
+    background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='UTF-8'%3F%3E%3Csvg width='26.307' height='26.304' version='1.1' viewBox='0 0 26.306717 26.304005' xmlns='http://www.w3.org/2000/svg' xmlns:cc='http://creativecommons.org/ns%23' xmlns:dc='http://purl.org/dc/elements/1.1/' xmlns:rdf='http://www.w3.org/1999/02/22-rdf-syntax-ns%23'%3E%3Cmetadata%3E%3Crdf:RDF%3E%3Ccc:Work rdf:about=''%3E%3Cdc:format%3Eimage/svg+xml%3C/dc:format%3E%3Cdc:type rdf:resource='http://purl.org/dc/dcmitype/StillImage'/%3E%3Cdc:title/%3E%3C/cc:Work%3E%3C/rdf:RDF%3E%3C/metadata%3E%3Cg transform='matrix(1.228 0 0 1.228 -7.3679 -7.3679)' fill='%23fff' fill-rule='evenodd'%3E%3Cg fill='%23fff'%3E%3Cpath d='m19.427 21.427c-1.3899 0.99036-3.0905 1.5729-4.9271 1.5729-4.6944 0-8.5-3.8056-8.5-8.5 0-4.6944 3.8056-8.5 8.5-8.5 4.6944 0 8.5 3.8056 8.5 8.5 0 1.8367-0.58252 3.5372-1.5729 4.9271l5.5848 5.5848c0.5502 0.5502 0.54561 1.4306-2e-4 1.9764l-0.02344 0.02344c-0.54442 0.54442-1.4307 0.5459-1.9764 2e-4zm-4.9271-0.42712c3.5899 0 6.5-2.9101 6.5-6.5s-2.9101-6.5-6.5-6.5-6.5 2.9101-6.5 6.5 2.9101 6.5 6.5 6.5z' fill='%23fff'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E%0A");
+    background-size: cover;
+    border: 0;
+    margin: {
+        left: 0.5rem;
+        right: 0.5rem;
+    }
+}
+
+@media only screen and (max-width: 480px) {
+    .section.header .search #search-checkbox:checked ~ #search-show {
+        background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='UTF-8'%3F%3E%3Csvg version='1.1' viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cg transform='translate(0 -1036.4)' fill='none' stroke='%23FFF' stroke-width='2'%3E%3Cpath d='m2 1050.4 12-12'/%3E%3Cpath d='m2 1038.4 12 12'/%3E%3C/g%3E%3C/svg%3E%0A");
+    }
+}
+
+.section.header .search #search-results {
+    position: absolute;
+    width: calc(100% - 0.5em);
+    top: calc(100% + 0.5em);
+    background-color: $black;
+}
+
+@media only screen and (max-width: 480px) {
+    .section.header .search #search-results {
+        position: absolute;
+        right: -1rem;
+        width: 100vw;
+    }
+}
+
+.section.header .search #search-results > a {
+    display: block;
+    border: 0;
+    margin: 0.5em;
+}
+
+.section.header .search #search-results > a > a {
+    color: $white;
+}
+
+.section.header .links {
     grid-area: 1 / 2 / 1 / 3;
-    display: flex;
-    align-items: center;
-    justify-content: right;
 }
 
-.section.header .right a {
+.section.header .links a {
     color: $header-foreground;
     padding: 0;
     border: 0;
