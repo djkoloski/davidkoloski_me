@@ -5,7 +5,7 @@ in_search_index = false
 +++
 
 <div class="self-image">
-    <img src="/img/self-image.jpg" alt="David Koloski">
+    <img src="/self-image.jpg" alt="David Koloski">
 </div>
 
 # Hi, I'm David
