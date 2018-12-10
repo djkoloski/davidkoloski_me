@@ -51,5 +51,8 @@ class SearchBox {
 
 window.onload = () => {
     const index = elasticlunr.Index.load(window.searchIndex)
+    // remove index page from search
+    // it can't be excluded from the search index normally so just do it here
+    index.removeDocByRef(window.location.protocol + "//" + window.location.host + "/")
     new SearchBox(index, document.getElementById('search-input')) 
 }
