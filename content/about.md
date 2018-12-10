@@ -4,7 +4,9 @@ weight = 0
 in_search_index = false
 +++
 
-<img src="/img/self-image.jpg" class="self-image" alt="David Koloski">
+<div class="self-image">
+    <img src="/img/self-image.jpg" alt="David Koloski">
+</div>
 
 # Hi, I'm David
 
