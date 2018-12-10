@@ -1,7 +1,23 @@
 {% extends "global.html" %}
 
 {% block content %}
-<div class="section">
+<div class="section title">
+    Hi, I'm David
+</div>
+<div class="section content">
     {{ section.content | safe }}
+</div>
+<div class="section pages">
+    <h1>Latest Blog Posts</h1>
+    {% set blog_section = get_section(path="blog/_index.md") %}
+    {% for page in blog_section.pages | slice(end=5) %}
+        <div class="page">
+            <a href="/{{ page.path | safe}}">{{ page.title }}</a>
+            <div class="posted-date">
+                {{ page.date | date(format="%B %e, %Y") }}
+            </div>
+        </div>
+    {% endfor %}
+    <p><a href="/{{ blog_section.path | safe}}">All blog posts</a></p>
 </div>
 {% endblock content %}
