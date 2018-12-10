@@ -1,0 +1,21 @@
+{% extends "global.html" %}
+
+{% block content %}
+<div class="section title">
+    {{ taxonomy.name | title }}
+    <div class="subtitle">
+        {% set section = get_section(path="blog/_index.md") %}
+        <a href="{{ section.permalink | safe }}">Back to {{ section.title }}</a>
+    </div>
+</div>
+<div class="section pages">
+    {% for term in terms %}
+        <div class="page">
+            <a href="{{ term.permalink }}">{{ term.name | title }}</a>
+            <div class="info">
+                {{ term.pages | length }} {% if term.pages | length > 1 %}pages{% else %}page{% endif %}
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock content %}

@@ -8,7 +8,7 @@
     {{ section.content | safe }}
 
     {% for page in section.pages %}
-        <p><a href="/{{ page.path | safe }}">{{ page.title }}</a></p>
+        <p><a href="{{ page.permalink | safe }}">{{ page.title }}</a></p>
     {% endfor %}
     {% for sub in section.subsections %}
         {% set subsection = get_section(path=sub) %}

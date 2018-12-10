@@ -5,13 +5,20 @@
     {{ section.title | safe }}
 </div>
 <div class="section pages">
+    <p>
+        Browse taxonomies: 
+        {% for taxonomy in config.taxonomies %}
+            <a href="/{{ taxonomy.name | slugify | safe }}">{{ taxonomy.name | title }}</a>
+        {% endfor %}
+    </p>
+
     {{ section.content | safe }}
 
     {% for page in section.pages %}
     <div class="page">
-        <a href="/{{ page.path | safe }}">{{ page.title }}</a>
-        <div class="posted-date">
-            {{ page.date | date(format="%B %e, %Y") }}
+        <a href="{{ page.permalink | safe }}">{{ page.title }}</a>
+        <div class="info">
+            <div>{{ page.date | date(format="%B %e, %Y") }}</div>
         </div>
     </div>
     {% endfor %}

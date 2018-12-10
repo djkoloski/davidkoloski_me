@@ -285,7 +285,11 @@ $header-background: $black;
     }
 }
 
-.section.title .posted-date {
+.section.title a {
+    color: $white;
+}
+
+.section.title .subtitle {
     font-size: 1rem;
 }
 
@@ -317,11 +321,15 @@ $header-background: $black;
     font-size: 1.5rem;
 }
 
-.section.pages .page .posted-date {
+.section.pages .page .info {
     margin: {
         top: 0.25rem;
         bottom: 0.25rem;
     }
+}
+
+.section.pages .page .info a {
+    font-size: 1rem;
 }
 
 /* Blog page */

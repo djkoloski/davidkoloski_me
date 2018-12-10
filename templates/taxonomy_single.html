@@ -2,15 +2,13 @@
 
 {% block content %}
 <div class="section title">
-    Hi, I'm David
-</div>
-<div class="section content">
-    {{ section.content | safe }}
+    {{ term.name | title }}
+    <div class="subtitle">
+        <a href="/{{ taxonomy.name | slugify | safe}}">Back to {{ taxonomy.name }}</a>
+    </div>
 </div>
 <div class="section pages">
-    <h1>Latest Blog Posts</h1>
-    {% set blog_section = get_section(path="blog/_index.md") %}
-    {% for page in blog_section.pages | slice(end=5) %}
+    {% for page in term.pages %}
         <div class="page">
             <a href="{{ page.permalink | safe}}">{{ page.title }}</a>
             <div class="info">
@@ -18,6 +16,5 @@
             </div>
         </div>
     {% endfor %}
-    <p><a href="{{ blog_section.permalink | safe}}">All blog posts</a></p>
 </div>
 {% endblock content %}
