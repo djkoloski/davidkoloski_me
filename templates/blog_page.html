@@ -11,7 +11,7 @@
     {% for key, values in page.taxonomies %}
     <div class="{{ key }}">
         {% for value in values %}
-            <a href="{{ get_taxonomy_url(kind=key, name=value) }}">{{ value | title }}</a>{% if not loop.last %},{% endif %}
+            <a href="{{ get_taxonomy_url(kind=key, name=value) | safe }}">{{ value | title }}</a>{% if not loop.last %},{% endif %}
         {% endfor %}
     </div>
     {% endfor %}
