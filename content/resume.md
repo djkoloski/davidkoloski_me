@@ -4,6 +4,10 @@ weight = 1
 in_search_index = false
 +++
 
+# David Koloski
+
+Software engineer, game designer, and web developer.
+
 # Experience
 
 ## Unreleased Project
@@ -84,6 +88,14 @@ I atttended RPI for three and a half years, earning Bachelor's degrees in Comput
 
 - Vulkan
 - OpenGL | ES
+
+## Web Development Frameworks
+
+- React
+- Vue
+- Bulma
+- Webpack
+- Gulp
 
 ## Version Control
 
