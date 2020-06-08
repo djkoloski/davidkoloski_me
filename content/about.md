@@ -16,7 +16,8 @@ I'm a software engineer, game designer, and web developer.
 
 I grew up in northeastern Pennsylvania, then attended RPI as a Game Design and Computer Science dual major.
 
-I'm currently working at [Vicarious Visions](http://www.vvisions.com) as a software engineer.
+I'm currently working at [Robot Entertainment](http://robotentertainment.com) as a Game Programmer.
+I previously worked at [Vicarious Visions](http://www.vvisions.com) as a software engineer.
 
 ## What I believe
 
