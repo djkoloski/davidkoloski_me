@@ -17,6 +17,7 @@ html {
 }
 
 body {
+    font-size: 1.25rem;
     line-height: 1.5;
     margin: 0;
 }
@@ -30,6 +31,10 @@ body {
     }
 }
 
+p {
+    line-height: 2;
+}
+
 a {
     text-decoration: none;
     border-bottom-style: solid;
@@ -40,6 +45,17 @@ a {
 pre {
     border: 2px solid $gray;
     padding: 1rem;
+}
+
+pre, code {
+    font-weight: 600;
+}
+
+li {
+    margin: {
+        top: 0.5em;
+        bottom: 0.5em;
+    }
 }
 
 .section {
@@ -125,6 +141,7 @@ $header-background: $black;
     color: $header-foreground;
     padding-top: 1rem;
     padding-bottom: 1rem;
+    font-size: 1rem;
 }
 
 .section.header > * {
@@ -291,7 +308,9 @@ $header-background: $black;
 }
 
 .section.title .subtitle {
-    font-size: 1rem;
+    font: {
+        size: 1.25rem;
+    }
 }
 
 @media only screen and (min-width: 768px) {
@@ -350,9 +369,10 @@ $header-background: $black;
     background: $blue;
     color: $white;
     padding: {
-        top: 0.5rem;
-        bottom: 0.5rem;
+        top: 0.75rem;
+        bottom: 0.75rem;
     }
+    font-size: 1.25rem;
 }
 
 .section.taxonomies a {
