@@ -12,11 +12,40 @@ Software engineer, game designer, and web developer.
 
 ## Unreleased Project
 
-**November 2018 - Present**
+**August 2020 - Present**
+
+*Robot Entertainment, Dallas TX*
+
+I'm currently working at Robot Entertainment on an unreleased project. More details when they're available.
+
+## Orcs Must Die! 3
+
+**December 2019 - August 2020**
+
+*Robot Entertainment, Dallas TX*
+
+I worked on Orcs Must Die! 3 with a team of around six other programmers.
+Transitioning onto the team, I worked primarily on UI.
+As the project progressed and we worked more closely with Stadia's hardware, I took on the graphics engineering work needed to get UE4 up to par with Google's technical requirements.
+Along with the graphics engineering work, I also led the charge on a number of nasty bugs that came up along the way.
+
+## ReadySet Heroes
+
+**March 2019 - December 2019**
+
+*Robot Entertainment, Dallas TX*
+
+I worked on ReadySet Heroes and a DLC update that was released a few months after launch.
+Along with working on a wide variety of tasks over the life of the project, I owned the UI and graphics/optimization.
+This was my first experience as part of the core team on an Unreal project, and I learned the engine architecture and workflows.
+
+## Unreleased Project
+
+**November 2018 - March 2019**
 
 *Vicarious Visions, Albany NY*
 
-I'm currently working at Vicarious Visions. More project details when they're publicly available.
+I worked on an unreleased project at Vicarious Visions, with a focus on graphics engineering for mobile. Unfortunately I'm not sure what came of it.
 
 ## Spyro Reignited Trilogy
 
