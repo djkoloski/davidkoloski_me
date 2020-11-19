@@ -21,10 +21,10 @@
 </div>
 <div class="section navigation">
     {% if page.earlier %}
-        Previous article: {{ page.earlier.permalink }}
+        Previous article: <a href="{{ page.earlier.permalink }}">{{ page.earlier.title | safe }}</a>
     {% endif %}
     {% if page.later %}
-        Next article: {{ page.later.permalink }}
+        Next article: <a href="{{ page.later.permalink }}">{{ page.later.title | safe }}</a>
     {% endif %}
 </div>
 {% endblock content %}
