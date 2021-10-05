@@ -17,7 +17,7 @@ html {
 }
 
 body {
-    font-size: 1.25rem;
+    font-size: 1rem;
     line-height: 1.5;
     margin: 0;
 }
@@ -132,7 +132,7 @@ table td {
     display: block;
     overflow: hidden;
     width: 48px;
-    height: 26.304px;
+    height: 27px;
     background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='UTF-8'%3F%3E%3Csvg width='25.4mm' height='13.924mm' version='1.1' viewBox='0 0 25.4 13.92365' xmlns='http://www.w3.org/2000/svg' xmlns:cc='http://creativecommons.org/ns%23' xmlns:dc='http://purl.org/dc/elements/1.1/' xmlns:rdf='http://www.w3.org/1999/02/22-rdf-syntax-ns%23'%3E%3Cmetadata%3E%3Crdf:RDF%3E%3Ccc:Work rdf:about=''%3E%3Cdc:format%3Eimage/svg+xml%3C/dc:format%3E%3Cdc:type rdf:resource='http://purl.org/dc/dcmitype/StillImage'/%3E%3Cdc:title/%3E%3C/cc:Work%3E%3C/rdf:RDF%3E%3C/metadata%3E%3Cg transform='translate(0 -283.08)'%3E%3Cpath d='m22.613 283.08c-0.7117 0-1.4232 0.27299-1.9685 0.81841l-1.2589 1.2589c-0.31388-1.1941-1.3856-2.0746-2.6809-2.0746-1.5424 0-2.7842 1.2419-2.7842 2.7842v8.3526c0 1.5424 1.2418 2.7842 2.7842 2.7842 1.2956 0 2.37-0.88009 2.6836-2.0745l1.2562 1.2561c1.0907 1.0907 2.8464 1.0907 3.937 0 1.0907-1.0904 1.0907-2.8463 0-3.937l-2.2051-2.2051 2.2051-2.2077c1.0907-1.0907 1.0907-2.8464 0-3.937-0.54534-0.54542-1.2568-0.81841-1.9685-0.81841zm-19.133 3e-3c-1.9221-3.6e-4 -3.4803 1.5578-3.4803 3.4799v6.9605c0 1.9221 1.5582 3.4802 3.4803 3.4802h2.0882c3.8442 0 6.9605-3.1164 6.9605-6.9605 0-3.8441-3.1163-6.9605-6.9605-6.9605z' fill='%23fff'/%3E%3C/g%3E%3C/svg%3E%0A");
     background-size: cover;
     border-bottom: 0;
@@ -289,6 +289,7 @@ $header-background: $black;
         top: 1rem;
         bottom: 1rem;
     }
+    margin-top: 1rem;
 }
 
 @media only print {
@@ -328,18 +329,15 @@ $header-background: $black;
 }
 
 /* About */
-.self-image {
+img[src$="#self-image"] {
     display: block;
     text-align: center;
-    margin: 1.25em;
-}
-
-.self-image img {
+    margin: 1.25em auto;
     border-radius: 1rem;
 }
 
 @media screen and (min-width: 480px) {
-    .self-image {
+    img[src$="#self-image"] {
         display: inline;
         margin-left: 1.25em;
         float: right;

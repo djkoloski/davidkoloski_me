@@ -4,11 +4,9 @@ weight = 0
 in_search_index = false
 +++
 
-<div class="self-image">
-    <img src="/self-image.jpg" alt="David Koloski">
-</div>
+![A picture of me](/self-image.jpg#self-image)
 
-# Hi, I'm David
+## Hi, I'm David
 
 I'm a software engineer, game designer, and web developer.
 
@@ -16,8 +14,8 @@ I'm a software engineer, game designer, and web developer.
 
 I grew up in northeastern Pennsylvania, then attended RPI as a Game Design and Computer Science dual major.
 
-I'm currently working at [Robot Entertainment](http://robotentertainment.com) as a Game Programmer.
-I previously worked at [Vicarious Visions](http://www.vvisions.com) as a software engineer.
+I'm currently working at [Google](http://google.com) as a software engineer.
+I previously worked at [Robot Entertainment](http://robotentertainment.com) as a game programmer and [Vicarious Visions](http://www.vvisions.com) as a software engineer.
 
 ## What I believe
 
@@ -36,5 +34,3 @@ Humans are social creatures, and we always have been. The internet is incredibly
 ## Contact me
 
 You can reach me [by email](mailto:me@davidkoloski.me), follow me [on twitter](http://twitter.com/david_koloski), find me [on github](http://github.com/djkoloski), or connect with me [on LinkedIn](https://www.linkedin.com/in/dkoloski/).
-
-<div class="clearfix"></div>

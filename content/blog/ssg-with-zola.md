@@ -8,7 +8,7 @@ categories = ["web development"]
 tags = ["zola", "rust", "static site generation"]
 +++
 
-# I'm a big fan of Rust
+## I'm a big fan of Rust
 
 And so are a lot of other people. There's a lot to love about the language, build system, and packages available. But what really brings it home is the community around the language and how they approach programming. In general, the Rust community seems to strike a good balance between purity and pragmatism. Maybe it's because of what the language was built to do, or maybe it's a copy and paste of Mozilla internal culture, but either way it means that Rust makes really good tools. You might have heard of [ripgrep](https://github.com/BurntSushi/ripgrep), but you probably haven't heard of [Zola](https://www.getzola.org/).
 
@@ -20,38 +20,38 @@ And so are a lot of other people. There's a lot to love about the language, buil
 
 If this piques your interest already, then I'd suggest you go grab the [latest release](https://github.com/getzola/zola/releases) and follow along.
 
-# Getting started
+## Getting started
 
-## Zola init
+### Zola init
 
 Making a new site project is incredibly easy - just run:
 
 ```sh
-$ zola init my_site
+zola init my_site
 ```
 
 and it will create a new directory named `my_site` with the right directory structure set up and ready to go. Just change into the new directory and keep going from there:
 
 ```sh
-$ cd my_site
+cd my_site
 ```
 
-## Zola build
+### Zola build
 
 Building the site is as simple as running:
 
 ```sh
-$ zola build
+zola build
 ```
 
 and it will build the entire site into a new directory named `public`. This is how the final build of the site is made; copying the `public` directory to a simple file server is all you need to do to deploy.
 
-## Zola serve
+### Zola serve
 
 For development, Zola comes with a development server built-in. Run:
 
 ```sh
-$ zola serve
+zola serve
 ```
 
 and it will continuously:
@@ -62,9 +62,9 @@ and it will continuously:
 
 This makes for a really great iteration loop since you don't have to constantly switch back and forth between your text editor and browser to refresh it. For obvious reasons, you shouldn't use use the Zola server to serve your final build.
 
-# Building blocks
+## Building blocks
 
-## Pages and Sections
+### Pages and Sections
 
 Zola is built on the idea that a site is compsed of *pages* and *sections* arranged in a tree structure.
 
@@ -74,7 +74,7 @@ Zola is built on the idea that a site is compsed of *pages* and *sections* arran
 
 The `content` directory in a Zola project defines how the site is structured. Each directory defines a new section{{ citation(id=1) }} and the Markdown files inside of it are the pages that are children of that section{{ citation(id=2) }}. This is why your root index page at `my-site.com` is a section: it contains all of the other sections and pages in the site.
 
-## Templates
+### Templates
 
 Zola uses [Tera Templates](https://tera.netlify.com/) for page templating. They have a lot more documentation about the templating engine on their site, so I'll cover mainly how the Tera works with Zola.
 
@@ -86,17 +86,17 @@ Zola will look in the `templates` directory for HTML templates to apply to the M
 
 Zola will take all the metadata about sections and pages that it has available, and expose it through a `section` or `page` object to the template. The Markdown for the section or page can be injected into the template through either `{{ section.content }}` or `{{ page.content }}`.
 
-## Sass
+### Sass
 
 Zola automatically compiles any Sass files directly under the `sass` directory into CSS files. Sass is a great set of extensions to CSS that make it easier to write and maintain your styles. I ended up mostly leveraging its variables, but there are a lot of other quality-of-life features and powerful styling tools that make it a joy to use.
 
-## Static content and Assets Colocation
+### Static content and Assets Colocation
 
 Files placed in the `static` directory will be copied over as-is to the compiled site, so it's a good place to put content that will be used across the entire site.
 
 Zola also supports ["assets colocation"](https://www.getzola.org/documentation/content/overview/#assets-colocation), which is a fancy way of saying that if you put non-Markdown files under the `content` directory, they'll be copied over right next to other Markdown files' compiled HTML pages. This makes it really easy to organize pages that require custom assets like images and javascript files.
 
-# Conclusion
+## Conclusion
 
 After working with Zola for a while, the overall experience has been very pleasant. At first I found Zola's notion of sections and pages and little unintuitive, but I think that part of that is due to some confusing wording in their site's documentation. It was really easy to set up and the iteration loop is fast and efficient. While it's still a bit rough around the edges{{ citation(id=3) }}, I can definitely recommend it for anyone looking to make a site like mine.
 
