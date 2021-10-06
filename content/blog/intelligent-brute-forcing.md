@@ -10,6 +10,51 @@ tags = ["rust", "puzzles"]
 
 Blog post goes here!
 
+Controls:
+
+- WASD/Arrow keys: Move
+- Space: Undo
+- Shift + Space: Reset
+- Escape: Unfocus (or just click away)
+
+{% anima(solver=true, import=true) %}
+{
+    "name": "Square Dance",
+    "width": 5,
+    "height": 5,
+    "tiles": [
+        " ....",
+        ".r.r.",
+        ".. ..",
+        ".r.r.",
+        ".... "
+    ],
+    "actors": [
+        {
+            "color": "red",
+            "x": 2,
+            "y": 1
+        },
+        {
+            "color": "red",
+            "x": 1,
+            "y": 2
+        },
+        {
+            "color": "red",
+            "x": 3,
+            "y": 2
+        },
+        {
+            "color": "red",
+            "x": 2,
+            "y": 3
+        }
+    ],
+    "optimalMoves": 12
+}
+{% end %}
+
 ## All puzzles
 
 {% anima() %}
@@ -27,7 +72,7 @@ Blog post goes here!
             "y": 0
         }
     ],
-    "minMoves": 2
+    "optimalMoves": 2
 }
 {% end %}
 
@@ -48,7 +93,7 @@ Blog post goes here!
             "y": 2
         }
     ],
-    "minMoves": 6
+    "optimalMoves": 6
 }
 {% end %}
 
@@ -71,7 +116,7 @@ Blog post goes here!
             "y": 2
         }
     ],
-    "minMoves": 16
+    "optimalMoves": 16
 }
 {% end %}
 
@@ -107,7 +152,7 @@ Blog post goes here!
             "y": 2
         }
     ],
-    "minMoves": 16
+    "optimalMoves": 16
 }
 {% end %}
 
@@ -145,7 +190,7 @@ Blog post goes here!
             "y": 3
         }
     ],
-    "minMoves": 10
+    "optimalMoves": 10
 }
 {% end %}
 
@@ -183,7 +228,7 @@ Blog post goes here!
             "y": 4
         }
     ],
-    "minMoves": 13
+    "optimalMoves": 13
 }
 {% end %}
 
@@ -241,7 +286,7 @@ Blog post goes here!
             "y": 4
         }
     ],
-    "minMoves": 7
+    "optimalMoves": 7
 }
 {% end %}
 
@@ -279,7 +324,7 @@ Blog post goes here!
             "y": 3
         }
     ],
-    "minMoves": 12
+    "optimalMoves": 12
 }
 {% end %}
 
@@ -319,7 +364,7 @@ Blog post goes here!
             "y": 6
         }
     ],
-    "minMoves": 15
+    "optimalMoves": 15
 }
 {% end %}
 
@@ -342,7 +387,7 @@ Blog post goes here!
             "y": 2
         }
     ],
-    "minMoves": 16
+    "optimalMoves": 16
 }
 {% end %}
 
@@ -380,7 +425,7 @@ Blog post goes here!
             "y": 4
         }
     ],
-    "minMoves": 11
+    "optimalMoves": 11
 }
 {% end %}
 
@@ -406,7 +451,7 @@ Blog post goes here!
             "y": 2
         }
     ],
-    "minMoves": 6
+    "optimalMoves": 6
 }
 {% end %}
 
@@ -437,7 +482,7 @@ Blog post goes here!
             "y": 2
         }
     ],
-    "minMoves": 6
+    "optimalMoves": 6
 }
 {% end %}
 
@@ -475,7 +520,7 @@ Blog post goes here!
             "y": 3
         }
     ],
-    "minMoves": 10
+    "optimalMoves": 10
 }
 {% end %}
 
@@ -512,7 +557,7 @@ Blog post goes here!
             "y": 3
         }
     ],
-    "minMoves": 11
+    "optimalMoves": 11
 }
 {% end %}
 
@@ -548,7 +593,7 @@ Blog post goes here!
             "y": 2
         }
     ],
-    "minMoves": 8
+    "optimalMoves": 8
 }
 {% end %}
 
@@ -584,7 +629,7 @@ Blog post goes here!
             "y": 1
         }
     ],
-    "minMoves": 11
+    "optimalMoves": 11
 }
 {% end %}
 
@@ -624,7 +669,7 @@ Blog post goes here!
             "y": 4
         }
     ],
-    "minMoves": 13
+    "optimalMoves": 13
 }
 {% end %}
 
@@ -660,7 +705,7 @@ Blog post goes here!
             "y": 0
         }
     ],
-    "minMoves": 15
+    "optimalMoves": 15
 }
 {% end %}
 
@@ -700,7 +745,7 @@ Blog post goes here!
             "y": 6
         }
     ],
-    "minMoves": 14
+    "optimalMoves": 14
 }
 {% end %}
 
@@ -743,6 +788,6 @@ Blog post goes here!
             "y": 2
         }
     ],
-    "minMoves": 19
+    "optimalMoves": 19
 }
 {% end %}

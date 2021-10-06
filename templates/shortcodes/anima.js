@@ -1,11 +1,15 @@
-window.addEventListener('load', (event) => {
+window.addEventListener('load', async (event) => {
+  await wasm_bindgen('/anima_solver_bg.wasm')
+
   for (let json of document.getElementsByClassName('anima-data')) {
     const data = JSON.parse(json.text)
     json.insertAdjacentElement(
       'afterend',
       new Puzzle({
         data,
-        scale: 50,
+        scale: Number(json.getAttribute('data-scale')),
+        solver: json.getAttribute('data-solver') === 'true',
+        import: json.getAttribute('data-import') === 'true'
       })
     )
   }
@@ -82,6 +86,12 @@ class Puzzle extends CustomElement {
     this.refs.board.addEventListener('focus', e => this.activate())
     this.refs.board.addEventListener('blur', e => this.deactivate())
     document.addEventListener('keydown', e => this.onKeyDown(e))
+    this.refs.focuser.addEventListener('click', e => this.refs.board.focus())
+
+    this.refs.autoSolve.addEventListener('change', e => this.updateDisplay())
+    this.refs.solveButton.addEventListener('click', e => this.solve())
+
+    this.refs.importButton.addEventListener('click', e => this.import())
 
     this.history = []
   }
@@ -89,7 +99,7 @@ class Puzzle extends CustomElement {
   update () {
     this.refs.name.textContent = this.props.data.name
 
-    this.refs.optimalCount.textContent = `${this.props.data.minMoves}`
+    this.refs.optimalMoves.textContent = `${this.props.data.optimalMoves}`
 
     this.refs.board.style.width = `${this.props.data.width * this.props.scale}px`
     this.refs.board.style.height = `${this.props.data.height * this.props.scale}px`
@@ -134,6 +144,11 @@ class Puzzle extends CustomElement {
       this.actors.push(actor)
       this.refs.board.appendChild(actor)
     }
+
+    this.refs.solver.style.visibility = (this.props.solver ? 'visible' : 'collapse')
+    this.refs.import.style.visibility = (this.props.import ? 'visible' : 'collapse')
+
+    this.refs.importInput.value = JSON.stringify(this.props.data)
   }
 
   tile (x, y) {
@@ -182,11 +197,11 @@ class Puzzle extends CustomElement {
         break
       case 'Space':
       case 'KeyZ':
-        this.undo()
-        e.preventDefault()
-        break
-      case 'KeyR':
-        this.reset()
+        if (e.shiftKey) {
+          this.reset()
+        } else {
+          this.undo()
+        }
         e.preventDefault()
         break
       case 'Escape':
@@ -346,11 +361,75 @@ class Puzzle extends CustomElement {
   updateDisplay () {
     if (this.isSolved()) {
       this.classList.add('solved')
+      this.classList.add('was-solved')
+      if (this.history.length == this.props.data.optimalMoves) {
+        this.classList.add('was-optimal')
+      }
     } else {
       this.classList.remove('solved')
     }
 
-    this.refs.moveCount.textContent = `${this.history.length}`
+    this.refs.moves.textContent = `${this.history.length}`
+
+    if (this.refs.autoSolve.checked) {
+      this.solve()
+    }
+  }
+
+  solve () {
+    let puzzle = ''
+    for (let row of this.props.data.tiles) {
+      puzzle += row + '\n'
+    }
+    puzzle += '\n'
+    for (let actor of this.actors) {
+      puzzle += `${actor.props.color == 'red' ? 'R' : 'B'} ${actor.props.x} ${actor.props.y}\n`
+    }
+
+    let start = performance.now()
+    let solution = wasm_bindgen.solve(puzzle)
+    let end = performance.now()
+    this.refs.solveTime.textContent = `${(end - start) / 1000}s`
+
+    let solutionHTML = ''
+
+    solutionHTML += '<ol>'
+    for (let move of solution) {
+      solutionHTML += '<li>'
+      switch (move) {
+        case 0:
+          solutionHTML += '➡️ Right'
+          break
+        case 1:
+          solutionHTML += '⬆️ Up'
+          break
+        case 2:
+          solutionHTML += '⬅️ Left'
+          break
+        case 3:
+          solutionHTML += '⬇️ Down'
+          break
+      }
+      solutionHTML += '</li>'
+    }
+    solutionHTML += '</ol>'
+    this.refs.solution.innerHTML = solutionHTML
+  }
+
+  import () {
+    this.history = []
+
+    this.classList.remove('solved')
+    this.classList.remove('was-solved')
+    this.classList.remove('was-optimal')
+
+    let data = JSON.parse(this.refs.importInput.value)
+    this.props = {
+      ...this.props,
+      data,
+    }
+
+    this.updateDisplay()
   }
 }
 window.customElements.define('anima-puzzle', Puzzle)
