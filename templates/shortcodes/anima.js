@@ -1,5 +1,5 @@
 window.addEventListener('load', async (event) => {
-  await wasm_bindgen('/anima_solver_bg.wasm')
+  await wasm_bindgen('/wasm/anima_solver_bg.wasm')
 
   for (let json of document.getElementsByClassName('anima-data')) {
     const data = JSON.parse(json.text)
@@ -145,8 +145,12 @@ class Puzzle extends CustomElement {
       this.refs.board.appendChild(actor)
     }
 
-    this.refs.solver.style.visibility = (this.props.solver ? 'visible' : 'collapse')
-    this.refs.import.style.visibility = (this.props.import ? 'visible' : 'collapse')
+    if (!this.props.solver) {
+      this.refs.solver.classList.add('hidden')
+    }
+    if (!this.props.import) {
+      this.refs.import.classList.add('hidden')
+    }
 
     this.refs.importInput.value = JSON.stringify(this.props.data)
   }
