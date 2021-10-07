@@ -95,23 +95,25 @@ class Puzzle extends CustomElement {
       }
     })
     this.refs.board.addEventListener('touchmove', e => {
-      if (this.active && !this.touch.done) {
-        let dx = e.targetTouches[0].clientX - this.touch.startX
-        let dy = e.targetTouches[0].clientY - this.touch.startY
+      if (this.active) {
+        if (!this.touch.done) {
+          let dx = e.targetTouches[0].clientX - this.touch.startX
+          let dy = e.targetTouches[0].clientY - this.touch.startY
 
-        const SWIPE_DIST = 40
-        if (dx < -SWIPE_DIST) {
-          this.move(-1, 0)
-          this.touch.done = true
-        } else if (dx > SWIPE_DIST) {
-          this.move(1, 0)
-          this.touch.done = true
-        } else if (dy < -SWIPE_DIST) {
-          this.move(0, 1)
-          this.touch.done = true
-        } else if (dy > SWIPE_DIST) {
-          this.move(0, -1)
-          this.touch.done = true
+          const SWIPE_DIST = 40
+          if (dx < -SWIPE_DIST) {
+            this.move(-1, 0)
+            this.touch.done = true
+          } else if (dx > SWIPE_DIST) {
+            this.move(1, 0)
+            this.touch.done = true
+          } else if (dy < -SWIPE_DIST) {
+            this.move(0, 1)
+            this.touch.done = true
+          } else if (dy > SWIPE_DIST) {
+            this.move(0, -1)
+            this.touch.done = true
+          }
         }
 
         e.preventDefault()
