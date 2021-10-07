@@ -11,6 +11,14 @@
     <div class="spacer"></div>
     <div class="board-container">
         <h3 data-ref="name"></h3>
+        <div class="controls">
+            <button data-ref="undo">
+                <img src="data:image/svg+xml,%3Csvg width='24px' height='24px' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7.18,4,8.6,5.44,6.06,8h9.71a6,6,0,0,1,0,12h-2V18h2a4,4,0,0,0,0-8H6.06L8.6,12.51,7.18,13.92,2.23,9Z' /%3E%3C/svg%3E%0A">
+            </button>
+            <button data-ref="reset">
+                <img src="data:image/svg+xml,%3Csvg width='24px' height='24px' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='none' stroke='%23000' stroke-width='2' d='M20,8 C18.5974037,5.04031171 15.536972,3 12,3 C7.02943725,3 3,7.02943725 3,12 C3,16.9705627 7.02943725,21 12,21 L12,21 C16.9705627,21 21,16.9705627 21,12 M21,3 L21,9 L15,9'/%3E%3C/svg%3E%0A">
+            </button>
+        </div>
         <div data-ref="board" tabindex="0"></div>
         <span data-ref="focuser">
             Click to play
@@ -47,30 +55,30 @@
             margin: 0.5rem auto;
             overflow-x: auto;
         }
-        :host > * {
-            margin-right: 0.5rem;
-            margin-left: 0.5rem;
-        }
         .spacer {
-            margin: 0;
             flex-grow: 1;
         }
         .board-container {
             text-align: center;
             flex-shrink: 0;
+            padding-left: 32px;
         }
         [data-ref="focuser"] {
+            display: inline-block;
             position: relative;
-            top: -0.5rem;
-            padding: 0.25rem 0.5rem;
+            top: -0.3rem;
+            padding: 0 0.5rem;
             background-color: #fff;
             border-radius: 0.75rem;
             box-shadow: 0 0 7px rgba(0, 0, 0, 0.5);
             z-index: 1;
             cursor: pointer;
+            transform: scale(1);
+            transition: transform 0.15s cubic-bezier(.18, .85, .67, 1.53);
         }
         :host(.active) [data-ref="focuser"] {
-            opacity: 0;
+            transform: scale(0.0);
+            transition: transform 0.1s linear;
         }
         .optimal-threshold {
             display: none;
@@ -82,6 +90,56 @@
         :host(.was-solved.was-optimal) .optimal-threshold::after {
             content: " ✔";
             color: #006600;
+        }
+        .controls {
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            height: 0;
+            bottom: 10px;
+            left: -34px;
+        }
+        @keyframes bounce1 {
+            0% {
+                transform: scale(1.0);
+            }
+            30% {
+                transform: scale(1.2);
+            }
+            60% {
+                transform: scale(0.8);
+            }
+            100% {
+                transform: scale(1.0);
+            }
+        }
+        @keyframes bounce2 {
+            0% {
+                transform: scale(1.0);
+            }
+            30% {
+                transform: scale(1.2);
+            }
+            60% {
+                transform: scale(0.8);
+            }
+            100% {
+                transform: scale(1.0);
+            }
+        }
+        [data-ref="reset"], [data-ref="undo"] {
+            padding: 6px;
+            width: 36px;
+            height: 36px;
+            border-radius: 18px;
+            z-index: 3;
+            animation-duration: 0.2s;
+        }
+        [data-ref="reset"].one, [data-ref="undo"].one {
+            animation-name: bounce1;
+        }
+        [data-ref="reset"].two, [data-ref="undo"].two {
+            animation-name: bounce2;
         }
         [data-ref="board"] {
             background-color: #e8e8e8;
@@ -124,13 +182,14 @@
             height: 100px;
             opacity: 0.8;
             filter: drop-shadow(0 0 1rem rgba(0, 0, 0, 0.5));
-            transform: translate(-50%, -50%) scale(0.0);
             transform-origin: center;
-            transition: transform 0.25s cubic-bezier(.18, .85, .67, 1.53);
+            transform: translate(-50%, -50%) scale(0.0);
+            transition: transform 0.1s linear;
             z-index: 3;
         }
         :host(.solved) [data-ref="board"]::after {
             transform: translate(-50%, -50%) scale(1.0);
+            transition: transform 0.25s cubic-bezier(.18, .85, .67, 1.53);
         }
         .tile {
             position: absolute;
@@ -177,6 +236,7 @@
             text-align: center;
             display: flex;
             flex-direction: column;
+            margin-left: 0.5rem;
         }
         [data-ref="import"].hidden {
             display: none;
@@ -198,6 +258,7 @@
             font-family: inherit;
             font-size: inherit;
             margin: 0.25rem;
+            cursor: pointer;
         }
         button:hover {
             background-color: #e0e0e0;
@@ -215,6 +276,7 @@
             text-align: center;
             display: flex;
             flex-direction: column;
+            margin-left: 0.5rem;
         }
         [data-ref="solver"].hidden {
             display: none;
@@ -238,7 +300,7 @@
         :host {
             display: block;
             position: absolute;
-            transition: left 0.15s, bottom 0.15s;
+            transition: transform 0.15s;
             z-index: 2;
         }
         .color {

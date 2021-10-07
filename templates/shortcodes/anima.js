@@ -69,10 +69,9 @@ class Actor extends CustomElement {
         throw new Error(`Invalid color ${this.props.color}`)
     }
 
-    this.style.width = `${100 / this.props.boardWidth}%`
-    this.style.height = `${100 / this.props.boardHeight}%`
-    this.style.left = `${this.props.x * 100 / this.props.boardWidth}%`
-    this.style.bottom = `${this.props.y * 100 / this.props.boardHeight}%`
+    this.style.width = `${this.props.scale}px`
+    this.style.height = `${this.props.scale}px`
+    this.style.transform = `translate(${this.props.x * this.props.scale}px, ${(this.props.height - this.props.y - 1) * this.props.scale}px)`
   }
 }
 window.customElements.define('anima-actor', Actor)
@@ -85,8 +84,68 @@ class Puzzle extends CustomElement {
 
     this.refs.board.addEventListener('focus', e => this.activate())
     this.refs.board.addEventListener('blur', e => this.deactivate())
+
+    this.touch = {}
+    this.refs.board.addEventListener('touchstart', e => {
+      if (this.active) {
+        this.touch.startX = e.targetTouches[0].clientX
+        this.touch.startY = e.targetTouches[0].clientY
+        this.touch.done = false
+        e.preventDefault()
+      }
+    })
+    this.refs.board.addEventListener('touchmove', e => {
+      if (this.active && !this.touch.done) {
+        let dx = e.targetTouches[0].clientX - this.touch.startX
+        let dy = e.targetTouches[0].clientY - this.touch.startY
+
+        const SWIPE_DIST = 40
+        if (dx < -SWIPE_DIST) {
+          this.move(-1, 0)
+          this.touch.done = true
+        } else if (dx > SWIPE_DIST) {
+          this.move(1, 0)
+          this.touch.done = true
+        } else if (dy < -SWIPE_DIST) {
+          this.move(0, 1)
+          this.touch.done = true
+        } else if (dy > SWIPE_DIST) {
+          this.move(0, -1)
+          this.touch.done = true
+        }
+
+        e.preventDefault()
+      }
+    })
+    this.refs.board.addEventListener('touchend', e => {
+      if (this.active && !this.touch.done) {
+        this.refs.board.blur()
+      }
+    })
+
     document.addEventListener('keydown', e => this.onKeyDown(e))
     this.refs.focuser.addEventListener('click', e => this.refs.board.focus())
+
+    this.refs.undo.addEventListener('focus', e => {
+      e.preventDefault()
+      if (e.relatedTarget == this.refs.board) {
+        this.refs.board.focus()
+      }
+    })
+    this.refs.undo.addEventListener('click', e => {
+      this.undo()
+      this.bounce(this.refs.undo)
+    })
+    this.refs.reset.addEventListener('focus', e => {
+      e.preventDefault()
+      if (e.relatedTarget == this.refs.board) {
+        this.refs.board.focus()
+      }
+    })
+    this.refs.reset.addEventListener('click', e => {
+      this.reset()
+      this.bounce(this.refs.reset)
+    })
 
     this.refs.autoSolve.addEventListener('change', e => this.updateDisplay())
     this.refs.solveButton.addEventListener('click', e => this.solve())
@@ -113,10 +172,10 @@ class Puzzle extends CustomElement {
           let div = document.createElement('div')
 
           div.classList.add('tile')
-          div.style.width = `${100 / this.props.data.width}%`
-          div.style.height = `${100 / this.props.data.height}%`
-          div.style.left = `${100 * x / this.props.data.width}%`
-          div.style.bottom = `${100 * y / this.props.data.height}%`
+          div.style.width = `${this.props.scale}px`
+          div.style.height = `${this.props.scale}px`
+          div.style.left = `${x * this.props.scale}px`
+          div.style.bottom = `${y * this.props.scale}px`
 
           if (tile === 'r') {
             div.classList.add('goal')
@@ -138,8 +197,8 @@ class Puzzle extends CustomElement {
         x: dataActor.x,
         y: dataActor.y,
         color: dataActor.color,
-        boardWidth: this.props.data.width,
-        boardHeight: this.props.data.height,
+        scale: this.props.scale,
+        height: this.props.data.height,
       })
       this.actors.push(actor)
       this.refs.board.appendChild(actor)
@@ -203,14 +262,23 @@ class Puzzle extends CustomElement {
       case 'KeyZ':
         if (e.shiftKey) {
           this.reset()
+          this.bounce(this.refs.reset)
         } else {
           this.undo()
+          this.bounce(this.refs.undo)
         }
         e.preventDefault()
         break
       case 'Escape':
         this.refs.board.blur()
         e.preventDefault()
+        break
+      case 'Tab':
+        if (e.shiftKey) {
+          this.refs.board.blur()
+          this.refs.reset.focus()
+          e.preventDefault()
+        }
         break
       default:
         break
@@ -275,11 +343,9 @@ class Puzzle extends CustomElement {
       }
 
       actor.props = {
+        ...actor.props,
         x: nextPos[i].x,
         y: nextPos[i].y,
-        color: actor.props.color,
-        boardWidth: actor.props.boardWidth,
-        boardHeight: actor.props.boardHeight,
       }
     }
 
@@ -297,27 +363,33 @@ class Puzzle extends CustomElement {
       for (let i = 0; i < this.actors.length; ++i) {
         let actor = this.actors[i]
         actor.props = {
+          ...actor.props,
           x: positions[i].x,
           y: positions[i].y,
-          color: actor.props.color,
-          boardWidth: actor.props.boardWidth,
-          boardHeight: actor.props.boardHeight,
         }
       }
     } else {
       for (let i = 0; i < this.actors.length; ++i) {
         let actor = this.actors[i]
         actor.props = {
+          ...actor.props,
           x: this.props.data.actors[i].x,
           y: this.props.data.actors[i].y,
-          color: actor.props.color,
-          boardWidth: actor.props.boardWidth,
-          boardHeight: actor.props.boardHeight,
         }
       }
     }
 
     this.updateDisplay()
+  }
+
+  bounce (element) {
+    if (element.classList.contains('one')) {
+      element.classList.remove('one')
+      element.classList.add('two')
+    } else {
+      element.classList.remove('two')
+      element.classList.add('one')
+    }
   }
 
   reset () {
