@@ -12,12 +12,19 @@
     <div class="board-container">
         <h3 data-ref="name"></h3>
         <div class="controls">
-            <button data-ref="undo">
-                <img src="data:image/svg+xml,%3Csvg width='24px' height='24px' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7.18,4,8.6,5.44,6.06,8h9.71a6,6,0,0,1,0,12h-2V18h2a4,4,0,0,0,0-8H6.06L8.6,12.51,7.18,13.92,2.23,9Z' /%3E%3C/svg%3E%0A">
-            </button>
-            <button data-ref="reset">
-                <img src="data:image/svg+xml,%3Csvg width='24px' height='24px' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='none' stroke='%23000' stroke-width='2' d='M20,8 C18.5974037,5.04031171 15.536972,3 12,3 C7.02943725,3 3,7.02943725 3,12 C3,16.9705627 7.02943725,21 12,21 L12,21 C16.9705627,21 21,16.9705627 21,12 M21,3 L21,9 L15,9'/%3E%3C/svg%3E%0A">
-            </button>
+            <div class="left">
+                <button data-ref="undo">
+                    <img src="data:image/svg+xml,%3Csvg width='24px' height='24px' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7.18,4,8.6,5.44,6.06,8h9.71a6,6,0,0,1,0,12h-2V18h2a4,4,0,0,0,0-8H6.06L8.6,12.51,7.18,13.92,2.23,9Z' /%3E%3C/svg%3E%0A">
+                </button>
+                <button data-ref="reset">
+                    <img src="data:image/svg+xml,%3Csvg width='24px' height='24px' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='none' stroke='%23000' stroke-width='2' d='M20,8 C18.5974037,5.04031171 15.536972,3 12,3 C7.02943725,3 3,7.02943725 3,12 C3,16.9705627 7.02943725,21 12,21 L12,21 C16.9705627,21 21,16.9705627 21,12 M21,3 L21,9 L15,9'/%3E%3C/svg%3E%0A">
+                </button>
+            </div>
+            <div class="right">
+                <button data-ref="link">
+                    <img src="data:image/svg+xml,%3Csvg width='24px' height='24px' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='none' stroke='%23000' stroke-width='2' d='M16.1251884,2.42026615 C16.9095797,1.63587482 18.1818354,1.63638083 18.9643331,2.41887857 L21.5811214,5.03566688 C22.3647464,5.81929188 22.3723943,7.08215115 21.5797338,7.87481161 L17.8748116,11.5797338 C17.0904203,12.3641252 15.8181646,12.3636192 15.0356669,11.5811214 L12.4188786,8.96433312 C11.6352536,8.18070812 11.6276057,6.91784885 12.4202662,6.12518839 L16.1251884,2.42026615 Z M6.12518839,12.4202662 C6.90957973,11.6358748 8.18183538,11.6363808 8.96433312,12.4188786 L11.5811214,15.0356669 C12.3647464,15.8192919 12.3723943,17.0821512 11.5797338,17.8748116 L7.87481161,21.5797338 C7.09042027,22.3641252 5.81816462,22.3636192 5.03566688,21.5811214 L2.41887857,18.9643331 C1.63525357,18.1807081 1.6276057,16.9178488 2.42026615,16.1251884 L6.12518839,12.4202662 Z M7,17 L17,7'/%3E%3C/svg%3E%0A">
+                </button>
+            </div>
         </div>
         <div data-ref="board" tabindex="0"></div>
         <span data-ref="focuser">
@@ -27,24 +34,18 @@
             <span data-ref="moves">0</span><span class="optimal-threshold"> / <span data-ref="optimalMoves">0</span></span> moves
         </div>
     </div>
-    <div data-ref="solver">
-        <h3>Solver</h3>
-        <div data-ref="solution"></div>
-        <div>
+    <div data-ref="controls">
+        <div class="import">
+            <input type="text" data-ref="importInput">
+            <button data-ref="importButton">Import</button>
+        </div>
+        <div data-ref="solution">
+            <em>Solve to find a solution</em>
+        </div>
+        <div class="solve">
             <input type="checkbox" data-ref="autoSolve"/>Auto
             <button data-ref="solveButton">Solve</button>
-        </div>
-        <div class="solve-statistics">
             <span data-ref="solveTime">0.000s</span>
-        </div>
-    </div>
-    <div data-ref="import">
-        <h3>Import</h3>
-        <div class="import-input">
-            <textarea data-ref="importInput"></textarea>
-        </div>
-        <div>
-            <button data-ref="importButton">Import</button>
         </div>
     </div>
     <div class="spacer"></div>
@@ -61,7 +62,7 @@
         .board-container {
             text-align: center;
             flex-shrink: 0;
-            padding-left: 32px;
+            padding: 0 32px;
         }
         [data-ref="focuser"] {
             display: inline-block;
@@ -93,11 +94,22 @@
         }
         .controls {
             display: flex;
-            flex-direction: column;
             position: relative;
             height: 0;
-            bottom: 10px;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+        .controls .left, .controls .right {
+            position: relative;
+            top: -10px;
+            display: flex;
+            flex-direction: column;
+        }
+        .controls .left {
             left: -34px;
+        }
+        .controls .right {
+            right: -34px;
         }
         @keyframes bounce1 {
             0% {
@@ -127,7 +139,7 @@
                 transform: scale(1.0);
             }
         }
-        [data-ref="reset"], [data-ref="undo"] {
+        [data-ref="reset"], [data-ref="undo"], [data-ref="link"] {
             padding: 6px;
             width: 36px;
             height: 36px;
@@ -135,10 +147,10 @@
             z-index: 3;
             animation-duration: 0.2s;
         }
-        [data-ref="reset"].one, [data-ref="undo"].one {
+        [data-ref="reset"].one, [data-ref="undo"].one, [data-ref="link"].one {
             animation-name: bounce1;
         }
-        [data-ref="reset"].two, [data-ref="undo"].two {
+        [data-ref="reset"].two, [data-ref="undo"].two, [data-ref="link"].two {
             animation-name: bounce2;
         }
         [data-ref="board"] {
@@ -232,24 +244,7 @@
         .tile.goal.blue::after {
             background-color: #0989B2;
         }
-        [data-ref="import"] {
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            margin-left: 0.5rem;
-        }
-        [data-ref="import"].hidden {
-            display: none;
-        }
-        .import-input {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-        }
-        .import-input textarea {
-            flex-grow: 1;
-        }
-        button {
+        button, input {
             padding: 0.25rem 0.5rem;
             background-color: #fff;
             border: 0;
@@ -258,6 +253,8 @@
             font-family: inherit;
             font-size: inherit;
             margin: 0.25rem;
+        }
+        button {
             cursor: pointer;
         }
         button:hover {
@@ -267,31 +264,53 @@
             background-color: #ccc;
             box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
         }
-        textarea {
-            border: 0;
-            border-radius: 0.75rem;
-            box-shadow: 0 0 7px rgba(0, 0, 0, 0.5);
+        input[type="text"] {
+            width: 0;
+            flex-grow: 1;
         }
-        [data-ref="solver"] {
+        [data-ref="controls"] {
             text-align: center;
             display: flex;
             flex-direction: column;
             margin-left: 0.5rem;
+            margin-top: 1rem;
         }
-        [data-ref="solver"].hidden {
+        [data-ref="controls"].hidden {
             display: none;
+        }
+        .import, .solve {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 0.5rem 0;
+        }
+        [data-ref="importInput"].error {
+            background: #ffb8cb;
         }
         [data-ref="solution"] {
             min-width: 200px;
             height: 0;
             flex-grow: 1;
-            text-align: left;
-            overflow-y: scroll;
-            border-radius: 0.75rem;
-            box-shadow: 0 0 7px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            overflow-y: auto;
         }
-        .solve-statistics {
-            font-size: small;
+        [data-ref="solution"] table {
+            margin: 0 auto;
+            font-family: monospace;
+            font-weight: bold;
+        }
+        [data-ref="solution"] td {
+            padding: 0 0.5rem;
+            text-align: left;
+        }
+        [data-ref="solution"] td:first-child {
+            text-align: right;
+        }
+        [data-ref="solveButton"] {
+            margin: 0 0.75rem;
+        }
+        [data-ref="solveTime"] {
+            flex-grow: 1;
         }
     </style>
 </template>
@@ -344,18 +363,18 @@
 {% if not scale %}
 {% set scale = 50 %}
 {% endif %}
-{% if not solver %}
-{% set solver = false %}
+{% if not controls %}
+{% set controls = false %}
 {% endif %}
-{% if not import %}
-{% set import = false %}
+{% if not dynamic %}
+{% set dynamic = false %}
 {% endif %}
 <script
     class="anima-data"
     type="application/json"
     data-scale="{{ scale }}"
-    data-solver="{{ solver }}"
-    data-import="{{ import }}"
+    data-controls="{{ controls }}"
+    data-dynamic="{{ dynamic }}"
 >
     {{ body | safe }}
 </script>

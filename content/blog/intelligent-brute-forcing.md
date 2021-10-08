@@ -2,7 +2,7 @@
 title = "Intelligent brute forcing"
 description = "Solving NP-hard puzzles with the oldest trick in the book"
 slug = "intelligent-brute-forcing"
-date = 2021-04-10
+date = 2021-10-07
 [taxonomies]
 categories = ["rust"]
 tags = ["rust", "puzzles"]
@@ -17,7 +17,7 @@ Controls:
 - Shift + Space: Reset
 - Escape: Unfocus (or just click away)
 
-{% anima(solver=true, import=true) %}
+{% anima(controls=true) %}
 {
     "name": "Square Dance",
     "width": 5,
@@ -789,5 +789,82 @@ Controls:
         }
     ],
     "optimalMoves": 19
+}
+{% end %}
+
+## Bonus puzzles
+
+{% anima() %}
+{
+    "name": "Side Channel",
+    "width": 4,
+    "height": 5,
+    "tiles": [
+        ".b..",
+        "....",
+        "   .",
+        "....",
+        "r.r."
+    ],
+    "actors": [
+        {
+            "color": "blue",
+            "x": 1,
+            "y": 0
+        },
+        {
+            "color": "red",
+            "x": 0,
+            "y": 4
+        },
+        {
+            "color": "red",
+            "x": 2,
+            "y": 4
+        }
+    ],
+    "optimalMoves": 20
+}
+{% end %}
+
+{% anima() %}
+{
+    "name": "Antiparticle",
+    "width": 5,
+    "height": 5,
+    "tiles": [
+        ".....",
+        ".r.r.",
+        ".....",
+        ".r.r.",
+        "....."
+    ],
+    "actors": [
+        {
+            "color": "red",
+            "x": 1,
+            "y": 2
+        },
+        {
+            "color": "red",
+            "x": 2,
+            "y": 1
+        },
+        {
+            "color": "red",
+            "x": 2,
+            "y": 3
+        },
+        {
+            "color": "red",
+            "x": 3,
+            "y": 2
+        },
+        {
+            "color": "blue",
+            "x": 2,
+            "y": 2
+        }
+    ]
 }
 {% end %}

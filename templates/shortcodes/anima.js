@@ -1,16 +1,35 @@
+const PLAYGROUND_URL = 'http://davidkoloski.me/blog/anima-playground'
+
 window.addEventListener('load', async (event) => {
   await wasm_bindgen('/wasm/anima_solver_bg.wasm')
 
   for (let json of document.getElementsByClassName('anima-data')) {
-    const data = JSON.parse(json.text)
+    let puzzle = {
+      data: JSON.parse(json.text),
+      scale: Number(json.getAttribute('data-scale')),
+      controls: json.getAttribute('data-controls') === 'true'
+    }
+
+    let params = new URL(document.location).searchParams
+
+    let data = params.get('data')
+    let scale = params.get('scale')
+    let controls = params.get('controls')
+
+    if (json.getAttribute('data-dynamic') === 'true' && data != null) {
+      console.log(data)
+      puzzle.data = JSON.parse(atob(data))
+    }
+    if (scale != null) {
+      puzzle.scale = Number(scale)
+    }
+    if (controls === 'true') {
+      puzzle.controls = true
+    }
+
     json.insertAdjacentElement(
       'afterend',
-      new Puzzle({
-        data,
-        scale: Number(json.getAttribute('data-scale')),
-        solver: json.getAttribute('data-solver') === 'true',
-        import: json.getAttribute('data-import') === 'true'
-      })
+      new Puzzle(puzzle)
     )
   }
 })
@@ -148,10 +167,21 @@ class Puzzle extends CustomElement {
       this.reset()
       this.bounce(this.refs.reset)
     })
+    this.refs.link.addEventListener('focus', e => {
+      e.preventDefault()
+      if (e.relatedTarget == this.refs.board) {
+        this.refs.board.focus()
+      }
+    })
+    this.refs.link.addEventListener('click', e => {
+      this.copyLinkToClipboard()
+      this.bounce(this.refs.link)
+    })
 
     this.refs.autoSolve.addEventListener('change', e => this.updateDisplay())
     this.refs.solveButton.addEventListener('click', e => this.solve())
 
+    this.refs.importInput.addEventListener('focus', e => this.refs.importInput.select())
     this.refs.importButton.addEventListener('click', e => this.import())
 
     this.history = []
@@ -206,11 +236,8 @@ class Puzzle extends CustomElement {
       this.refs.board.appendChild(actor)
     }
 
-    if (!this.props.solver) {
-      this.refs.solver.classList.add('hidden')
-    }
-    if (!this.props.import) {
-      this.refs.import.classList.add('hidden')
+    if (!this.props.controls) {
+      this.refs.controls.classList.add('hidden')
     }
 
     this.refs.importInput.value = JSON.stringify(this.props.data)
@@ -278,7 +305,7 @@ class Puzzle extends CustomElement {
       case 'Tab':
         if (e.shiftKey) {
           this.refs.board.blur()
-          this.refs.reset.focus()
+          this.refs.link.focus()
           e.preventDefault()
         }
         break
@@ -467,30 +494,35 @@ class Puzzle extends CustomElement {
     let start = performance.now()
     let solution = wasm_bindgen.solve(puzzle)
     let end = performance.now()
-    this.refs.solveTime.textContent = `${(end - start) / 1000}s`
+    this.refs.solveTime.textContent = `${((end - start) / 1000).toFixed(3)}s`
 
     let solutionHTML = ''
 
-    solutionHTML += '<ol>'
-    for (let move of solution) {
-      solutionHTML += '<li>'
+    solutionHTML += '<table>'
+    for (let [index, move] of solution.entries()) {
+      let emoji = '?'
+      let direction = '???'
       switch (move) {
         case 0:
-          solutionHTML += '➡️ Right'
+          direction = 'Right'
+          emoji = '➡️'
           break
         case 1:
-          solutionHTML += '⬆️ Up'
+          direction = 'Up'
+          emoji = '⬆️'
           break
         case 2:
-          solutionHTML += '⬅️ Left'
+          direction = 'Left'
+          emoji = '⬅️'
           break
         case 3:
-          solutionHTML += '⬇️ Down'
+          direction = 'Down'
+          emoji = '⬇️'
           break
       }
-      solutionHTML += '</li>'
+      solutionHTML += `<tr><td>${index + 1}</td><td>${direction}</td><td>${emoji}</td></tr>`
     }
-    solutionHTML += '</ol>'
+    solutionHTML += '</table>'
     this.refs.solution.innerHTML = solutionHTML
   }
 
@@ -501,13 +533,29 @@ class Puzzle extends CustomElement {
     this.classList.remove('was-solved')
     this.classList.remove('was-optimal')
 
-    let data = JSON.parse(this.refs.importInput.value)
-    this.props = {
-      ...this.props,
-      data,
-    }
+    let source = this.refs.importInput.value
+    try {
+      if (source.startsWith(PLAYGROUND_URL)) {
+        let base64 = source.match(/(\?|&)data=(?<base64>[a-zA-Z0-9+\/=]*)(&|$)/).groups.base64
+        source = atob(base64)
+      }
 
-    this.updateDisplay()
+      this.props = {
+        ...this.props,
+        data: JSON.parse(source),
+      }
+
+      this.refs.importInput.classList.remove('error')
+      this.updateDisplay()
+    } catch (e) {
+      this.refs.importInput.classList.add('error')
+      console.log(e)
+    }
+  }
+
+  copyLinkToClipboard () {
+    let json = JSON.stringify(this.props.data)
+    navigator.clipboard.writeText(`${PLAYGROUND_URL}?data=${btoa(json)}`)
   }
 }
 window.customElements.define('anima-puzzle', Puzzle)
