@@ -3,9 +3,6 @@ base_url = "https://davidkoloski.me"
 title = "David Koloski"
 description = "Software Engineer, Game Designer, Web Developer"
 
-highlight_code = true
-highlight_theme = "inspired-github"
-
 generate_rss = true
 
 taxonomies = [
@@ -16,6 +13,10 @@ taxonomies = [
 compile_sass = true
 
 build_search_index = true
+
+[markdown]
+highlight_code = true
+highlight_theme = "inspired-github"
 
 [extra]
 author = { name = "David Koloski" }

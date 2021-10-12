@@ -2,18 +2,11 @@
 title = "Anima Playground"
 description = "Puzzle playground for Anima puzzles"
 slug = "anima-playground"
-date = 2021-10-07
+date = 2021-10-10
 [taxonomies]
 categories = ["rust"]
 tags = ["rust", "puzzles"]
 +++
-
-Controls:
-
-- WASD/Arrow keys: Move
-- Space: Undo
-- Shift + Space: Reset
-- Escape: Unfocus (or just click away)
 
 {% anima(dynamic=true) %}
 {
@@ -51,4 +44,15 @@ Controls:
     ],
     "optimalMoves": 12
 }
+{% end %}
+
+{% center() %}
+
+### Controls
+
+- **Move**: WASD/Arrow keys (desktop), swipe (mobile)
+- **Undo**: Space (desktop), top left button
+- **Reset**: Shift + Space (desktop), bottom left button
+- **Unfocus**: Escape (desktop), click away, tap (mobile)
+
 {% end %}

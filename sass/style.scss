@@ -33,6 +33,7 @@ body {
 
 p {
     line-height: 2;
+    text-indent: 2.5em;
 }
 
 a {
@@ -51,6 +52,7 @@ a:visited {
 pre {
     border: 0.2rem solid $gray;
     padding: 1rem;
+    overflow: auto;
 }
 
 pre, code {
@@ -136,7 +138,7 @@ tr:nth-child(even) {
 }
 
 th, td {
-    padding: 0.25rem;
+    padding: 0.25rem 0.5rem;
 }
 
 /* Global */
@@ -438,4 +440,9 @@ img[src$="#self-image"] {
         flex-grow: 1;
         text-align: right;
     }
+}
+
+.center {
+    display: flex;
+    justify-content: center;
 }
