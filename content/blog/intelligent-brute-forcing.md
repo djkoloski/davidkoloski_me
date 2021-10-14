@@ -705,7 +705,7 @@ solve_antiparticle      time:   [201.26 ms 202.26 ms 203.36 ms]
 Well that's a little disappointing. At least, it is if you only look at the individual benchmarks.
 Two went up by around 5-15%, and one went down by over 50%. So while it wasn't a unilateral gain, it
 did give us a net benefit overall. And now, if we can improve our heuristic function somehow we can
-gain the benefit from that too. Let's take a look awt our explored states (and branching factor):
+gain the benefit from that too. Let's take a look at our explored states (and branching factor):
 
 | Puzzle       | Solution Length | Before (BF)    | After (BF)     | Change   |
 |--------------|----------------:|---------------:|---------------:|---------:|
@@ -929,9 +929,9 @@ evenly, or even positively.
 
 In the future, the best gains will likely come from improving our heuristic function. For this
 relatively simple game, there might not be much of a better heuristic we can calculate. In a more
-complex game, we can often calculate leverage the information in the puzzle to make a much better
-function though. When writing a solver for Stephen's Sausage Roll, which permitted a more accurate
-heuristic, the gains from a heuristic function were much larger.
+complex game, we can often leverage the information in the puzzle to make a much better function
+though. When writing a solver for Stephen's Sausage Roll, which permitted a more accurate heuristic,
+the gains from a heuristic function were much larger.
 
 Finally, you can actually use the solver written here right now! You can turn on the solver for any
 page that has a puzzle on it by adding `&controls=true` to the URL

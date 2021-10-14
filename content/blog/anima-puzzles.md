@@ -8,7 +8,16 @@ categories = ["rust"]
 tags = ["rust", "puzzles"]
 +++
 
-## All puzzles
+{% center() %}
+
+### Controls
+
+- **Move**: WASD/Arrow keys (desktop), swipe (mobile)
+- **Undo**: Space (desktop), top left button
+- **Reset**: Shift + Space (desktop), bottom left button
+- **Unfocus**: Escape (desktop), click away, tap (mobile)
+
+{% end %}
 
 {% anima() %}
 {
@@ -744,8 +753,6 @@ tags = ["rust", "puzzles"]
     "optimalMoves": 19
 }
 {% end %}
-
-## Bonus puzzles
 
 {% anima() %}
 {
