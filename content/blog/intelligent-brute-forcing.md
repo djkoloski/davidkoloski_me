@@ -431,11 +431,11 @@ be exploring the same state multiple times. We can avoid this by storing our exp
 hash set and only exploring its children if it's not already been visited:
 
 ```rust
-let mut states = Hashet::new();
+let mut states = HashSet::new();
 ...
 
 while let Some(parent_node) = queue.pop_front() {
-    ...
+    index += 1;
 
     if !states.contains(&parent_node) {
         ...
