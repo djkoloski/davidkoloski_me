@@ -500,13 +500,15 @@ pub struct State {
 }
 ```
 
-So imagine a board with a few red actors on it. Let's say four:
+So imagine a board with a few red actors on it. Let's say four, labeled A, B, C, and D:
 
-```txt
-A.B
-...
-C.D
-```
+{% center() %}
+| | | |
+|---|---|---|
+| A | _ | B |
+| _ | _ | _ |
+| C | _ | D |
+{% end %}
 
 With these four actors, there's actually `4!` ways we could represent the state since there are `4!`
 permutations of the actors in the vector. We can fix this by sorting our `actors` array. This will

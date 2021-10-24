@@ -8,6 +8,7 @@ $lightgray: #e0e0e0;
 $gray: #c0c0c0;
 $blue: #0989B2;
 $darkblue: #054a61;
+$languages: 'rust', 'bash';
 
 html {
     font: {
@@ -50,9 +51,31 @@ a:visited {
 }
 
 pre {
-    border: 0.2rem solid $gray;
-    padding: 1rem;
+    position: relative;
+    border: 0.15rem solid $gray;
+    padding: 0.75rem;
     overflow: auto;
+}
+
+pre::before {
+    position: absolute;
+    padding: 0 1rem;
+    top: 0;
+    left: 0;
+    background: $gray;
+    font-family: $font-stack;
+    font-weight: 100;
+    text-transform: capitalize;
+}
+
+@each $language in $languages {
+    pre.language-#{$language} {
+        padding-top: 1.75rem;
+    }
+    
+    pre.language-#{$language}::before {
+        content: "#{$language}";
+    }
 }
 
 pre, code {
@@ -139,6 +162,10 @@ tr:nth-child(even) {
 
 th, td {
     padding: 0.25rem 0.5rem;
+}
+
+th:empty {
+    display: none;
 }
 
 /* Global */
