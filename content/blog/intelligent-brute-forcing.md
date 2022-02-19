@@ -209,7 +209,7 @@ This is where we start writing our solver. You can follow along using the `start
 [GitHub repo](https://github.com/djkoloski/anima_solver), which will start you with all of the
 boilerplate:
 
-```bash
+```sh
 git clone --branch start https://github.com/djkoloski/anima_solver
 ```
 
@@ -300,7 +300,7 @@ We're going to use a nice and simple one to test:
 }
 {% end %}
 
-```bash
+```sh
 $ cargo run -- puzzles/line_dance.txt
 puzzles/line_dance.txt:
 Parse: 0.000201900s
@@ -311,7 +311,7 @@ Right, Right
 
 Cool, it found it! And that looks right too, let's see how fast it is in release mode:
 
-```bash
+```sh
 $ cargo run --release -- puzzles/line_dance.txt
 puzzles/line_dance.txt:
 Parse: 0.000122700s
@@ -344,7 +344,7 @@ out. Now let's step it up a little bit and try a harder puzzle:
 }
 {% end %}
 
-```bash
+```sh
 $ cargo run --release -- puzzles/u_turn.txt
 puzzles/u_turn.txt:
 Parse: 0.005942000s
@@ -378,7 +378,7 @@ Awesome, it got that one too! One more, this one's really more of the same:
 }
 {% end %}
 
-```bash
+```sh
 $ cargo run --release -- puzzles/spiral.txt
 ...
 ```
@@ -403,7 +403,7 @@ take a peek at how many states we're exploring:
 println!("Explored {} states", parents.len());
 ```
 
-```bash
+```sh
 $ cargo run --release -- puzzles/line_dance.txt
 Explored 3 states
 
@@ -447,7 +447,7 @@ while let Some(parent_node) = queue.pop_front() {
 
 Let's see how this affects our cases so far:
 
-```bash
+```sh
 $ cargo run --release -- puzzles/u_turn.txt
 Explored 20 states
 Solve: 0.000895100s
@@ -457,7 +457,7 @@ Down, Down, Left, Left, Up, Up
 
 That looks much better! Maybe we can solve our new puzzle now?
 
-```bash
+```sh
 $ cargo run --release -- puzzles/spiral.txt
 Explored 51 states
 puzzles/spiral.txt:
@@ -472,7 +472,7 @@ optimization alone brings all our sample puzzles into the realm of solvability! 
 benchmarking our solver more comprehensively. Let's pick a few representatives from the
 [sample puzzles set](/blog/) to bench:
 
-```bash
+```sh
 $ cargo bench
 solve_square_dance      time:   [16.658 ms 16.888 ms 17.125 ms]
 solve_fractal           time:   [44.606 ms 45.193 ms 45.806 ms]
@@ -529,7 +529,7 @@ pub fn transition(&self, data: &Data, direction: &Direction) -> State {
 A good way to think of this is as removing any unnecessary entropy in the state. Let's see how that
 affects our benchmarks:
 
-```bash
+```sh
 $ cargo bench
 
 solve_square_dance      time:   [4.4875 ms 4.5667 ms 4.6525 ms]
@@ -691,7 +691,7 @@ Instead of counting our states as we pop them off, we now need to keep track of 
 current state is in the `parents` list. And with that, we're done! We have a fully-functional A\*
 implementation ready to make our solver go super fast!
 
-```bash
+```sh
 $ cargo bench
 
 solve_square_dance      time:   [4.4051 ms 4.4276 ms 4.4524 ms]
@@ -742,7 +742,7 @@ pub fn transitions(&self, data: &Data) -> [(Direction, Transition<Self>); 4] {
 
 Let's see what that gets us:
 
-```bash
+```sh
 $ cargo bench
 
 solve_square_dance      time:   [4.4052 ms 4.4415 ms 4.4867 ms]
@@ -768,7 +768,7 @@ pub struct State {
 
 How about that:
 
-```bash
+```sh
 $ cargo bench
 
 solve_square_dance      time:   [4.0299 ms 4.0567 ms 4.0854 ms]
@@ -845,7 +845,7 @@ while let Some(parent_node) = queue.pop() {
 
 That should do the trick. Let's see how that changed our runtime:
 
-```bash
+```sh
 $ cargo bench
 
 solve_square_dance      time:   [3.8785 ms 3.9364 ms 3.9998 ms]
@@ -879,7 +879,7 @@ let mut queue = BinaryHeap::with_capacity(1024);
 We should expect these to only impact any puzzles that don't use memory above the pre-sizing
 threshold. Do we?
 
-```bash
+```sh
 $ cargo bench
 
 solve_square_dance      time:   [3.7025 ms 3.7311 ms 3.7652 ms]
@@ -906,7 +906,7 @@ vector and direction primitives that we can inline, so those might help a little
 especially hot `transition` function for our puzzle state should also help eliminate some overhead.
 Let's see how that impacts our performance:
 
-```bash
+```sh
 $ cargo bench
 
 solve_square_dance      time:   [3.7629 ms 3.8005 ms 3.8413 ms]
