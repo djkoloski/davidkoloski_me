@@ -8,6 +8,10 @@ categories = ["rust"]
 tags = ["rust"]
 +++
 
+## This post is not ready to share yet
+
+This post is still undergoing review and critique. If you're here by chance or follow the RSS feed, please do not share this post yet. It will be ready soon!
+
 ## Foreword
 
 This article is both an explanation and criticism of `impl Trait`. A large portion of this text is dedicated to explaining and understanding the properties of `impl Trait`, but it is not _solely_ an explainer. If you're already familiar with the properties and mechanics of `impl Trait`, you can skip to [this section](#impl-trait-and-a-new-type-abstraction-operator) to get to the meat of the criticism and the new ideas.
