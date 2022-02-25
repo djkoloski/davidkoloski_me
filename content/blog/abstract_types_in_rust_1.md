@@ -1,20 +1,18 @@
 +++
-title = "Abstract Types in Rust"
-description = "impl Trait was born wrong, but we can make it right"
-slug = "abstract-types-in-rust"
+title = "Abstract Types in Rust 1"
+description = "What is impl Trait?"
+slug = "abstract-types-in-rust-1"
 date = 2022-02-19
 [taxonomies]
 categories = ["rust"]
 tags = ["rust"]
 +++
 
-## This post is not ready to share yet
-
-This post is still undergoing review and critique. If you're here by chance or follow the RSS feed, please do not share this post yet. It will be ready soon!
+{{ not_ready() }}
 
 ## Foreword
 
-This article is both an explanation and criticism of `impl Trait`. A large portion of this text is dedicated to explaining and understanding the properties of `impl Trait`, but it is not _solely_ an explainer. If you're already familiar with the properties and mechanics of `impl Trait`, you can skip to [this section](#impl-trait-and-a-new-type-abstraction-operator) to get to the meat of the criticism and the new ideas.
+This series is both an explanation and criticism of `impl Trait`. A large portion of this text is dedicated to explaining and understanding the properties of `impl Trait`, but it is not _solely_ an explainer. If you're already familiar with the properties and mechanics of `impl Trait`, you can skip to [the next post](abstract-types-in-rust-2) to get to the meat of the criticism and the new ideas.
 
 I believe that the current implementation of `impl Trait` is confusing and non-orthogonal. I propose an alternative formulation of `impl Trait` that is more intuitive, restores orthogonality to the feature, and enables more precise and flexible use of abstraction.
 
@@ -201,7 +199,7 @@ Nice and easy, uncontroversial. But what about...
 
 ### Return position (traits)
 
-You can't use `impl Trait` in return position right now, but is that? Let's consider a desugaring of `impl Trait` as a return type in a trait:
+You can't use `impl Trait` in return position right now, but why is that? Let's consider a desugaring of `impl Trait` as a return type in a trait:
 
 ```rust
 trait Miner {
@@ -256,7 +254,7 @@ impl Miner for Quarry {
 }
 ```
 
-This makes sense, but something's not quite right here. The trait is dictating whether the return type of the function is abstract, but shouldn't the impl choose for itself whether to abstract its return type? After all, the impl is the one exposing that concrete type so it should also decide whether to let users introspect on it. Let's consider an alternative desugaring:
+This makes sense, but something's not quite right here. The trait is dictating whether the return type of the function is abstract, but shouldn't the impl choose for itself whether to abstract its return type? After all, the impl is the one exposing that concrete type. It should also decide whether to let users introspect on it. Let's consider an alternative desugaring:
 
 ### Return position (traits, remixed)
 
@@ -352,179 +350,6 @@ That would be more consistent, wouldn't it? We aren't hiding the concrete return
 type Target: Debug = _;
 ```
 
-Much better, now we can let the compiler figure out the return type of `target`, ensure that it implements `Debug`, and return it unabstracted.
+Much better, now we can let the compiler figure out the return type of `target`, ensure that it implements `Debug`, and return it unabstracted. But this leads us to an important question: which of these should be the _real_ `impl Trait`?
 
-But this leads us to an important question: which of these should be the _real_ `impl Trait`? From here on out, I'll present my _opinion_ on this question and a possible solution to this problem. 
-
-## `impl Trait` and a new type abstraction operator
-
-I propose that the desugaring for `impl Trait` in return position should not abstract the return type, and instead a new operator should be introduced for performing type abstraction. Let me be explicit:
-
-### A new desugaring
-
-`impl Trait` in return position should desugar from this:
-
-```rust
-fn target() -> impl Debug {
-    "hello world"
-}
-
-trait Miner {
-    fn mine() -> impl Ore;
-}
-
-impl Miner for Quarry {
-    fn mine() -> impl Ore {
-        Bauxite
-    }
-}
-```
-
-To this:
-
-```rust
-fn target() -> _: Debug {
-    "hello world"
-}
-
-trait Miner {
-    fn mine() -> _: Ore;
-}
-
-impl Miner for Quarry {
-    fn mine() -> _: Ore {
-        Bauxite
-    }
-}
-```
-
-And finally into this:
-
-```rust
-type Target: Debug = _;
-fn target() -> Target {
-    "hello world"
-}
-
-trait Miner {
-    type Mine: Ore;
-    fn mine() -> Self::Mine;
-}
-
-impl Miner for Quarry {
-    type Mine: Ore = _;
-    fn mine() -> Self::Mine {
-        Bauxite
-    }
-}
-```
-
-This requires two new features:
-
-- Bounds on type definitions (`type Target: Debug`, `type Mine: Ore`)
-- Type inference in type definitions (`type Target = _`, `type Mine = _`)
-
-We can emulate bounds with a construction like:
-
-```rust
-fn assert_impls_debug<T: Debug>() {}
-let _ = assert_impls_debug<Target>;
-
-fn assert_impls_ore<T: Ore>() {}
-let _ = assert_impls_ore<<Quarry as Miner>::Mine>;
-```
-
-Which works, albeit with some ugly errors. Type inference is a truly new feature, but it may be able to leverage existing infrastructure for deducing types. I also propose a restriction for inferred type definitions:
-
-> Inferred type definitions that are not bounded or otherwise constrained ("naked" type inference) result in a compiler warning.
-
-With that out of the way, we can get on to the big change:
-
-### `as impl Trait` as the type abstraction operator
-
-Consider this new syntax:
-
-```rust
-fn foo() -> &'static str as impl Debug {
-    "hello world"
-}
-```
-
-This new syntax would desugar to:
-
-```rust
-struct ImplDebug<T: Debug>(T);
-
-impl<T: Debug> Debug for ImplDebug<T> {
-    fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
-        self.0.fmt(f)
-    }
-}
-
-fn foo() -> ImplDebug<&'static str> {
-    ImplDebug("hello world")
-}
-```
-
-This allows abstract types to be used anywhere a regular type would be, and not just in return position. It would separate the type abstraction of `impl Trait` in return position from the type inference of it in argument position and help solve a number of outstanding problems with type abstraction.
-
-Let's take a look at some of those:
-
-## Problems solved
-
-### Return position impl trait in trait (RPITIT)
-
-Associated types of traits leak concrete types. Someone might use `<MyFoo as Foo>::Bar` somewhere that it needs to be `Debug`, and the compiler will let them as long as it is. But that's not part of our contract, and nobody should be allowed to depend on the fact that `MyBar` implements `Debug` if we don't want them to. So what if we could say something like this instead:
-
-```rust,hl_lines=7
-trait Cloner<T: Clone> {
-    type Cloned;
-    fn duplicate(x: &T) -> Self::Cloned;
-}
-
-impl<T: Clone> Cloner<T> for Printer {
-    type Cloned = T as impl Clone;
-    fn duplicate(x: &T) -> Self::Cloned {
-        x.clone() as impl Clone
-    }
-}
-```
-
-Now, the associated `T` type isn't `T`, it's an _abstraction_ of `T`. It's an abstraction that only exposes the fact that `T` implements `Clone`, which is exactly what we want.
-
-### Publicly abstracted private types
-
-With a little more elbow grease, this would also allow constructions like:
-
-```rust,hl_lines=1 5
-struct Thought;
-pub struct Brain;
-
-impl Factory for Brain {
-    type Output = Thought as impl Display;
-    fn produce() -> Self::Output {
-        ...
-    }
-}
-```
-
-Note that `Thought` is _private_, yet we're exposing it _through an abstraction_ in our associated type. This makes it possible for us to swap out the concrete type of `<Brain as Factory>::Output` without it being a breaking change! `Thought` was private and inaccessible, and so we could remove it entirely without causing any semver violations.
-
-### Reusable abstract types
-
-By leveraging our new type definition inference, we can use `as impl Trait` in type aliases:
-
-```rust,hl_lines=1
-pub type Id = _ as impl Hash + Eq;
-
-pub fn generate_id() -> Id { i32 }
-pub fn clone_id(x: Id) -> Id { ... }
-```
-
-This allows us to simultaneously abstract away the concrete type of `Id` while still guaranteeing that `generate_id` and `clone_id` return the same type.
-
-## Conclusion
-
-After reviewing the origins and inner workings of `impl Trait`, I have presented an alternative formulation of `impl Trait` that restores orthogonality to type inference and abstraction. I then outlined a new `as impl Trait` operator that performs type abstraction in more general contexts than `impl Trait` could. I believe these changes would make it easier to teach and use `impl Trait`, and lay a foundation for more complex functionality to build on.
-
-Many of these ideas are not new, they have been discussed and considered before. However, I think we now have the experience necessary to fix our past mistakes and a growing need for these more general tools.
+In [part 2](abstract-types-in-rust-2), I present my _opinion_ on this question and a possible solution to this problem.

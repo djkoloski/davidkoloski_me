@@ -112,12 +112,10 @@ code {
 }
 
 blockquote {
-    border-left: 0.25rem solid $black;
+    border-left: 0.5rem solid $black;
     padding-left: 0.5rem;
-}
-
-blockquote p {
-    text-indent: 0;
+    font-size: medium;
+    font-style: italic;
 }
 
 li {
@@ -508,4 +506,20 @@ img[src$="#self-image"] {
 .center {
     display: flex;
     justify-content: center;
+}
+
+.self-insert::before {
+    content: "A note from the author...";
+    font-style: italic;
+    opacity: 0.75;
+}
+
+.self-insert {
+    display: block;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    border-left: 0.5rem solid $black;
+    margin-left: 2rem;
+    margin-right: 2rem;
+    font-size: medium;
 }
