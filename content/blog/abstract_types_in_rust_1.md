@@ -1,6 +1,6 @@
 +++
 title = "Abstract Types in Rust 1"
-description = "What is impl Trait?"
+description = "What is `impl Trait`?"
 slug = "abstract-types-in-rust-1"
 date = 2022-02-19
 [taxonomies]
@@ -12,7 +12,7 @@ tags = ["rust"]
 
 ## Foreword
 
-This series is both an explanation and criticism of `impl Trait`. A large portion of this text is dedicated to explaining and understanding the properties of `impl Trait`, but it is not _solely_ an explainer. If you're already familiar with the properties and mechanics of `impl Trait`, you can skip to [the next post](abstract-types-in-rust-2) to get to the meat of the criticism and the new ideas.
+This series is both an explanation and criticism of `impl Trait`. A large portion of this text is dedicated to explaining and understanding the properties of `impl Trait`, but it is not _solely_ an explainer. If you're already familiar with the properties and mechanics of `impl Trait`, you can skip to [the next post](@/blog/abstract_types_in_rust_2.md) to get to the meat of the criticism and the new ideas.
 
 I believe that the current implementation of `impl Trait` is confusing and non-orthogonal. I propose an alternative formulation of `impl Trait` that is more intuitive, restores orthogonality to the feature, and enables more precise and flexible use of abstraction.
 
@@ -338,18 +338,22 @@ fn target() -> impl Debug {
 An alternative desugaring would be:
 
 ```rust
-type Target: Debug = &'static str;
-fn target() -> Target {
+type Target = &'static str;
+
+fn target() -> Target
+where
+    Target: Debug,
+{
     "hello world"
 }
 ```
 
-That would be more consistent, wouldn't it? We aren't hiding the concrete return type, and we're bounding our return type with a trait. This is a lot more like the desugaring for `impl Trait` in argument position. We had to determine the concrete `Target` type alias ourselves though, which is a little tedious. Wouldn't it be nice if we could make the compiler do that for us?
+That would be more consistent, wouldn't it? We aren't hiding the concrete return type, and we're bounding our return type with a trait. This is a lot more like the desugaring for `impl Trait` in argument position. The main sticking point is that this desugaring has to infer the concrete type of `Target`. This is equivalent to writing:
 
 ```rust
-type Target: Debug = _;
+type Target = _;
 ```
 
-Much better, now we can let the compiler figure out the return type of `target`, ensure that it implements `Debug`, and return it unabstracted. But this leads us to an important question: which of these should be the _real_ `impl Trait`?
+And allowing the compiler to infer the return type. This kind of type inference is not great, but it's an option.
 
-In [part 2](abstract-types-in-rust-2), I present my _opinion_ on this question and a possible solution to this problem.
+This leads us to an important question: which of these should be the _real_ `impl Trait`? In [part 2](@/blog/abstract_types_in_rust_2.md), I present my opinion on this question and a possible solution to this problem.

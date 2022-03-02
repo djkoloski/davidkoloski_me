@@ -2,9 +2,9 @@
 
 {% block content %}
 <div class="section title">
-    {{ page.title | safe }}
+    {{ page.title | markdown(inline=true) | safe }}
     <div class="subtitle">
-        {{ page.description }}
+        {{ page.description | markdown(inline=true) | safe }}
     </div>
     <div class="subtitle">
         {{ page.date | date(format="%b %e, %Y") }} &ndash; {{ page.reading_time }} min read

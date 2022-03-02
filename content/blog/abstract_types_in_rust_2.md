@@ -1,6 +1,6 @@
 +++
 title = "Abstract Types in Rust 2"
-description = "Will the real impl Trait please stand up"
+description = "Will the real `impl Trait` please stand up"
 slug = "abstract-types-in-rust-2"
 date = 2022-02-24
 [taxonomies]
@@ -12,7 +12,7 @@ tags = ["rust"]
 
 ## Where we left off
 
-In part 1, I laid the foundation of an alternative desugaring for `impl Trait` in return position. This new desugaring left the return type _unabstracted_, allowing the caller to introspect the type and learn more about it than the type signature provides. In this post, I will explore that idea more fully and try to discover the logical implications of it. If you're feeling goal-oriented, you can skip to [the next post](abstract-types-in-rust-3) where I discuss prior art and make my final set of recommendations.
+In part 1, I laid the foundation of an alternative desugaring for `impl Trait` in return position. This new desugaring left the return type _unabstracted_, allowing the caller to introspect the type and learn more about it than the type signature provides. In this post, I will explore that idea more fully and try to discover the logical implications of it. If you're feeling goal-oriented, you can skip to [the next post](@/blog/abstract_types_in_rust_3.md) where I discuss prior art and compare my proposal.
 
 ## Implications of unabstracted `impl Trait`
 
@@ -77,18 +77,16 @@ But now we have two copies of `generate`, and anything that calls it will also n
 
 ### Forward thinking
 
-Okay, I admit this is a pretty niche case. The amount of functionality this is blocking is miniscule at best. But humor me with a thought experiment.
-
-Someday in the future, perhaps we'll add a new trait to the standard library. Maybe it'll be useful enough that closures will implement it much like they do for `Clone` right now. In this future, we've just created a huge headache for everyone who wants to return closures.
+Presumably, new traits will be added to the standard library over time. Maybe some of them will be useful enough that closures will implement them, much like they do for `Clone` right now. For now, let's say that we've decided to implement `Debug` for closures. That would be cool, now people can for example check what variables are captured by a closure. In this future, we've just created a huge headache for everyone who wants to return one of them.
 
 To cover all the possible use cases, it's no longer suitable to have two copies of a function with different return types. Now, we need _four_ copies:
 
 - `impl Fn() -> T`
 - `Clone + impl Fn() -> T`
-- `CoolTrait + impl Fn() -> T`
-- `Clone + CoolTrait + impl Fn() -> T`
+- `Debug + impl Fn() -> T`
+- `Clone + Debug + impl Fn() -> T`
 
-And four copies of whatever calls those, and so on. That's not sustainable, and we're technically already here since we have `Clone` and `Copy`. We should take the opportunity we have now and fix this issue.
+And four copies of whatever calls those, and so on. That's not sustainable. In a technical sense, we're already here since closures eagerly implement `Clone` and `Copy`. If we want to return a closure that may implement either of these, we need different functions that all return different `impl Trait`s.
 
 ## Applying `impl Trait`
 
@@ -96,13 +94,13 @@ Let's consider what impacts our options have on this situation:
 
 ### Choose abstraction
 
-This is the situation we're currently in. We can't leak the implemented traits of our closure, so we're stuck implementing multiple copies of our functions to support everything that might call them.
+This is the situation we're currently in. We can't leak the implemented traits of our closure, so we're stuck implementing multiple copies of our functions to support everything that might call them. This has the downside of duplicating code, as well as preventing us from exploiting other traits implemented on the return type.
 
 ### Choose unabstraction
 
-We can leak our implemented traits! Now we only need one copy of our closure-returning function. What are the downsides?
+With unabstracted return types, we can leak our implemented traits! Now we only need one copy of our closure-returning function. What are the downsides?
 
-Some might consider this a downside:
+Here's one:
 
 ```rust
 fn return_mystery() -> impl Any {
@@ -110,24 +108,24 @@ fn return_mystery() -> impl Any {
 }
 ```
 
-This theoretically desugars to:
+Which would desugar to:
 
 ```rust
-type Mystery: Any = _;
-fn return_mystery() -> Mystery {
+type Mystery = _;
+
+fn return_mystery() -> Mystery
+where
+    Mystery: Any,
+{
     "it's a mystery!"
 }
 ```
 
-We can tell that `Mystery` is actually `&'static str`, but nobody else who glances at our source code will be able to. And yet, they'll be able to rely on all the concrete properties of `&'static str` on accident or on purpose.
+We know that `Mystery` is actually `&'static str`, but nobody else who glances at our source code will be able to. It's not in our function signature, it's inferred from our surroundings. And yet, anyone can rely on all the concrete properties of `&'static str` on accident or on purpose.
 
 Some of these downsides could be mitigated by, for example, linting for these cases. Places where `impl Trait` is used in return position, but the return type can be named. That would be the most extreme, but it would work.
 
 But then what's really the point? I felt like we were on the verge of a great idea, only to run head first into reality and hurt our heads.
-
-{% self_insert() %}
-To be clear, I do think that this alone is enough of a reason not to change the desugaring of `impl Trait` in return position. One of the reasons why Rust is so beloved is because it avoids exactly these kinds of situations. It would be a radical departure from the core design principles of Rust to allow type inference for return types. Bear with me for a bit.
-{% end %}
 
 Let's keep exploring, maybe we'll come to some sort of conclusion.
 
@@ -162,7 +160,7 @@ impl Miner for Quarry {
 We could always manually desugar it ourselves:
 
 ```rust
-struct ImplOre<T>(T);
+struct ImplOre<T: Ore>(T);
 
 impl<T: Ore> Ore for ImplOre<T> { ... }
 
@@ -278,7 +276,9 @@ fn foo() -> ImplDebug<&'static str> {
 }
 ```
 
-This allows abstract types to be used anywhere a regular type would be, and not just in return position. It would separate the type abstraction of `impl Trait` in return position from the type inference of it in argument position and help solve a number of outstanding problems with type abstraction.
+In this situation, `as impl Trait` would serve as the site where the abstracted type is generated. This gives us more control over when these wrappers are created and allows us to guarantee that multiple functions return the same abstracted type.
+
+This also allows abstract types to be used anywhere a regular type would be, and not just in return position. It would separate the type abstraction of `impl Trait` in return position from the type inference of it in argument position and help solve a number of outstanding problems with type abstraction.
 
 Let's take a look at how this would apply to RPITIT and TAIT.
 
@@ -361,32 +361,35 @@ We've dug ourselves a hole. In order to use `as impl Trait`, we need to name the
 Why couldn't we just give that closure a name? Maybe something like:
 
 ```rust
-fn generate<T>(value: T) -> type 'a as impl FnOnce() -> T {
-    'a: move || value
+fn generate<T>(value: T) -> type 'A as impl FnOnce() -> T {
+    'A: move || value
 }
 ```
 
 So here's some more new syntax. Similarly to how we label loops, we can label the creation sites of unnameable types. That way, we can uniquely refer to them in other places. This would solve both of our outstanding problems:
 
-Because we labeled our closure, we can now refer to it in our return type as `type 'a`.
+Because we labeled our closure, we can now refer to it in our return type as `type 'A`.
 
 Additionally, we can leave off the `as impl Trait` to return our closure concretely. This solves our earlier problem of returning a closure that _may be_ `Clone`!
 
 ```rust
-fn generate<T>(value: T) -> type 'a {
-    'a: move || value
+fn generate<T>(value: T) -> type 'A
+where
+    type 'A: Fn() -> T,
+{
+    'A: move || value
 }
 ```
 
-I'm not married to the syntax. It's functional, but I don't think it's great. I believe the idea is sound though.
+I'm not married to the syntax. It's functional, but I don't think it's great. I'll talk more about this in the next post.
 
 ## Conclusion
 
 In the first post, I stated that I would propose an alternative formulation of `impl Trait` that restores orthogonality. That comes in two parts:
 
 - `as impl Trait` now handles only type abstraction. Unnameable types like closures and async blocks use their own syntax to be named.
-- `type 'a` labels for unnameable types enable them to be returned concretely and abstracted cleanly.
+- `type 'A` labels for unnameable types enable them to be returned concretely and abstracted cleanly.
 
 Neither of these ideas are new, they have been discussed and considered before. However, I think we now have the experience necessary to fix our past mistakes and a growing need for these more general tools.
 
-In the [final post](abstract-types-in-rust-3), I'll discuss existing proposals and prior art, discuss the implications of my proposal, and make a final formal recommendation of what I think is the best path forward. I hope you'll read on.
+In the [third post](@/blog/abstract_types_in_rust_3.md), I'll discuss existing proposals and prior art and compare my proposal against them.
