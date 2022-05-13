@@ -1,7 +1,7 @@
 +++
 title = "A new impl Trait 4/4"
 description = "The end of `impl Trait`?"
-slug = "abstract-types-in-rust-4"
+slug = "a-new-impl-trait-4"
 date = 2022-05-13
 [taxonomies]
 categories = ["rust"]

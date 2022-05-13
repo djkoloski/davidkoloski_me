@@ -2,7 +2,7 @@
 title = "A new impl Trait 3/4"
 description = "The current state of `impl Trait`"
 slug = "a-new-impl-trait-3"
-date = 2022-05-13
+date = 2022-05-12
 [taxonomies]
 categories = ["rust"]
 tags = ["rust"]
