@@ -22,7 +22,17 @@ We've been breezing through many different examples and suggestions without real
 
 ### The lesser of two evils
 
-In this case, the two evils are **type inference** and **named unnameable types**. In order for `as impl Trait` to function, we must choose one of these. Note that we have already chosen one of these (type inference) with `impl Trait`. Having worked through some of the consequences, I do not pretend to know which would be cleaner, clearer, and most in line with Rust design goals. Let's consult a motivating example:
+In this case, the two evils are **type inference** and **named unnameable types**. In order for `as impl Trait` to function, we must choose one of these. Note that we have already chosen one of these (type inference) with `impl Trait`. I personally think that return type inference is simpler but less in line with Rust's goals{{ citation() }}. Let's consult a motivating example:
+
+```rust
+fn foo<T>(value: T) -> ?? {
+    move || value
+}
+
+fn bar() -> ?? {
+    foo(42)
+}
+```
 
 I would like to have some function `foo` return a closure that yields some given value. Then, I would like to have some function `bar` call `foo` with a predefined value and return the same type. `foo`'s return type must either be _inferred_ or _named_.
 
@@ -30,14 +40,14 @@ I would like to have some function `foo` return a closure that yields some given
 
 If `foo`'s return type is inferred, then `bar` must either:
 
-- Refer to `foo` to name its return type (i.e. `fn bar() -> <foo as Fn<(T,)>>::Output`)
-- Infer it from its body (i.e. `fn bar() -> _ { foo() }`)
+- Infer it from its body (i.e. `fn bar() -> _ { foo(42) }`, this is basically what `impl Trait` does right now)
+- Or, refer to `foo` to name its return type (i.e. `fn bar() -> <foo as Fn<(T,)>>::Output`)
 
 A type alias doesn't change the situation here, as it would also either state `type Output = <foo as Fn(T)>::Output` or `type Output = _`.
 
-In the case of inference, we end up long-range type inference and spooky action at a distance. This has the additional downside that it opens the door for inference to be used in places where it's not strictly necessary. This could lead to further confusion and, in my opinion, would render the feature more harm than good.
+If we infer the return type of `bar` from its body, we end up long-range type inference and spooky action at a distance. This has the additional downside that it opens the door for inference to be used in places where it's not strictly necessary. This could lead to further confusion and, in my opinion, would render the feature more harm than good.
 
-In the case of function outputs, we end up with `foo` only performing local inference which is considerably better. However, we suffer from the explicit function output signature, especially when we want to change the definition of `foo`. Modifying its arguments would require modifying the type signature of `bar` (or equivalently, the signature of the type alias) even when the return type has not changed. It makes maintenance more difficult at the same time as making discoverability more difficult.
+If we refer to `foo` to name `bar`'s return type, we end up with `foo` only performing local inference which is arguably better. However, we suffer from the explicit function output signature, especially when we want to change the definition of `foo`. Modifying its arguments would require modifying the type signature of `bar` (or equivalently, the signature of the type alias) even when the return type has not changed. It makes maintenance more difficult at the same time as making discoverability more difficult.
 
 #### Named
 
@@ -145,7 +155,7 @@ Now that we have the groundwork laid, we can make some engineering decisions:
 
 ### The ultimate goal
 
-I believe that return position `impl Trait` should be deprecated in favor of `as impl Trait`. Additionally, we must either stabilize naming the return value of a function (e.g. `<foo as Fn()>::Output`) or ban `as impl Trait` in return position. It would still be legal in type alises, which would effectively relegate it to syntax sugar for creating abstracted types. That's not necessarily a bad thing; remember that the `?` operator was a huge quality of life improvement and yet is relatively simple syntax sugar.
+I believe that return position `impl Trait` should be deprecated in favor of `as impl Trait`. Additionally, we must either stabilize naming the return value of a function (e.g. `<foo as Fn()>::Output`) or ban `as impl Trait` in return position. In the latter case, it would still be legal in type alises and that would effectively relegate it to syntax sugar for creating abstracted types. That's not necessarily a bad thing; remember that the `?` operator was a huge quality of life improvement and yet is relatively simple syntax sugar.
 
 The major fork in the road is that we must choose between type inference and explicit naming for unnameable types. They both have their pros and cons, and inference could be restricted to a local context if used with named function return values. I believe that any longer-range type inference (e.g. TAIT) is likely to cause more problems than it solves. Explicitly naming unnameable types requires some exotic syntax and may also cause more problems than it solves.
 
@@ -203,3 +213,13 @@ Whew, that was a lot of work. Hopefully I've inspired some new ideas and thought
 ### Thanks
 
 Thanks to [@computerdruid](https://github.com/computerdruid) and [@tmandry](https://github.com/tmandry) in particular for reviewing this series of posts and helping me hone my understanding of `impl Trait`.
+
+{% footnote() %}
+Don't get me wrong, I actually like type inference and use it all the time. However, I think of Rust's typing philosophy as a kind of ["stabilized inference"](https://en.wikipedia.org/wiki/Mechanically_stabilized_earth) model.
+
+In geotechnical engineering, it's common practice to use regular soil for building retaining walls, seawalls, and dikes. However, soil alone is not very strong and can easily flow when exposed to movement or water. A seawall made of plain soil would very quickly collapse from the soil shifting and flowing, but we can fix that by adding "_reinforcement_" to it. These are layers within the soil that provide stiffness and friction to prevent the soil from moving. It's kind of like a dirt sandwich with many layers, and it's [surprisingly effective](https://www.youtube.com/watch?v=0olpSN6_TCc).
+
+I think of Rust's type inference like the soil: it's on-site, abundant, and a natural choice for construction. But it has a tendency to shift and flow because it's only loosely held together. In large quantities it can quickly shift and flow when exposed to change. Likewise, I think of function signatures as the reinforcement. It's not a lot of material, but it's stiff and prevents the type inference inside of function bodies from moving too much. Just this little bit of added stiffness prevents changes from propagating across function boundaries, keeping the system as a whole stable.
+
+This is why I like type inference in statements, but I'm not a fan of type inference in function signatures.
+{% end %}
