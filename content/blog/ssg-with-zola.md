@@ -72,7 +72,7 @@ Zola is built on the idea that a site is compsed of *pages* and *sections* arran
 
 *Sections* are branch nodes on your site map, and they're meant to direct the user to the pages that they're interested in. Examples include directories that list out blog posts and link to them.
 
-The `content` directory in a Zola project defines how the site is structured. Each directory defines a new section{{ citation(id=1) }} and the Markdown files inside of it are the pages that are children of that section{{ citation(id=2) }}. This is why your root index page at `my-site.com` is a section: it contains all of the other sections and pages in the site.
+The `content` directory in a Zola project defines how the site is structured. Each directory defines a new section{{ citation() }} and the Markdown files inside of it are the pages that are children of that section{{ citation() }}. This is why your root index page at `my-site.com` is a section: it contains all of the other sections and pages in the site.
 
 ### Templates
 
@@ -98,14 +98,14 @@ Zola also supports ["assets colocation"](https://www.getzola.org/documentation/c
 
 ## Conclusion
 
-After working with Zola for a while, the overall experience has been very pleasant. At first I found Zola's notion of sections and pages and little unintuitive, but I think that part of that is due to some confusing wording in their site's documentation. It was really easy to set up and the iteration loop is fast and efficient. While it's still a bit rough around the edges{{ citation(id=3) }}, I can definitely recommend it for anyone looking to make a site like mine.
+After working with Zola for a while, the overall experience has been very pleasant. At first I found Zola's notion of sections and pages and little unintuitive, but I think that part of that is due to some confusing wording in their site's documentation. It was really easy to set up and the iteration loop is fast and efficient. While it's still a bit rough around the edges{{ citation() }}, I can definitely recommend it for anyone looking to make a site like mine.
 
-{% footnote(id=1) %}
+{% footnote() %}
 For all sections except the top-level index, you also need to add an `_index.md`.
 {% end %}
-{% footnote(id=2) %}
+{% footnote() %}
 With the exception of any `_index.md` files.
 {% end %}
-{% footnote(id=3) %}
+{% footnote() %}
 I had problems with the built-in pagination functionality. It seems like it either doesn't work right or I don't understand it and the docs are too sparse. The server works pretty well for content serving, but every once in a while I managed to crash it with some syntax errors. The system that refreshes the browser page when the server rebuilds content also seems to mess up every once in a while, but restarting the server fixes it.
 {% end %}

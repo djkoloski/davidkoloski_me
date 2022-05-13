@@ -1,14 +1,14 @@
 +++
-title = "Abstract Types in Rust 3"
-description = "The long and storied history of `impl Trait`"
-slug = "abstract-types-in-rust-3"
-date = 2022-02-25
+title = "A new impl Trait 3/4"
+description = "The current state of `impl Trait`"
+slug = "a-new-impl-trait-3"
+date = 2022-05-13
 [taxonomies]
 categories = ["rust"]
 tags = ["rust"]
 +++
 
-{{ not_ready() }}
+If you're not interested in reading about the prior work done on `impl Trait`, feel free to skip ahead to [the fourth and final post](@/blog/a_new_impl_trait_4.md).
 
 ## Prior work
 
@@ -33,7 +33,7 @@ The original proposal didn't have a concrete use-case for `impl Trait` outside o
 
 ### Named return types
 
-The original proposal suggested syntax like `collect_to_set::<T, I>::impl` to refer to the `impl Trait` return type of the function `collect_to_set`. This raised questions about how to refer to nested return types. `as impl Trait` does not have this problem, since the correct approach in this case would be to separate the return type into a type alias. Nested `as impl Trait`s can be approached in the same way.
+The original proposal suggested syntax like `collect_to_set::<T, I>::impl` to refer to the `impl Trait` return type of the function `collect_to_set`. This raised questions about how to refer to nested return types. `as impl Trait` does not have this problem, since the correct approach in this case would be to separate the return type into a type alias. It is good to question how named unnameable types interact with distant type aliases though and whether this would be an issue. Nested `as impl Trait`s can be approached in the same way.
 
 ### Trait object confusion
 
@@ -41,11 +41,11 @@ There was a lot of concern that it would be easy to confuse `impl Trait` (a stat
 
 ### `impl Trait` is not powerful enough
 
-`impl Trait` was proposed as being a very general-purpose equivalent of existential types, which `as impl Trait` does not. There was some reluctance to having two ways to express the same concept, which isn't as much of a problem with the newer desugaring.
+`impl Trait` was proposed as being a very general-purpose equivalent of existential types, which `as impl Trait` does not. There was some reluctance to having two ways to express the same concept, which isn't as much of a problem with `as impl Trait`.
 
 ### Coupled sugarings
 
-[@pnkfelix](https://github.com/pnkfelix) actually calls this out explicitly in [a comment](https://github.com/rust-lang/rfcs/pull/105#issuecomment-45329909), how `impl Trait` has two different uses depending on whether it's used in argument position or return position. There's also discussion about how covariant and contravariant appearances of `impl Trait` have different desugarings, and even a suggestion that `some Trait` be introduced to capture that notion. This parallels a lot of what was discussed in the first and second posts.
+[@pnkfelix](https://github.com/pnkfelix) actually calls this out explicitly in [a comment](https://github.com/rust-lang/rfcs/pull/105#issuecomment-45329909), how `impl Trait` has two different uses depending on whether it's used in argument position or return position. There's also discussion about how covariant and contravariant appearances of `impl Trait` have different desugarings, and even a suggestion that `some Trait` be introduced to capture that notion. This parallels a lot of what was discussed in the first post.
 
 ### Leaky auto traits
 
@@ -67,11 +67,11 @@ There are a few places here where the terminology around these types are questio
 
 ### Named output types
 
-[@eddyb](https://github.com/eddyb) suggests naming the return types of functions, which is very similar to my suggestion for named unnameable types. Even down to the use of the `type` keyword.
+[@eddyb](https://github.com/eddyb) suggests naming the return types of functions, which is very similar to my suggestion for named unnameable types. Even down to the use of the `type` keyword, which was fun to see. Naming the return types of functions alone would make it possible to do everything that type alias `as impl Trait` can do, but using it in conjunction with type aliases would give us incredibly comfy ergonomics.
 
 ### Anxiety of `impl Trait` overuse
 
-The downsides of `impl Trait` are known, and a few people pointed out that encouraging the use of `impl Trait` in more places could lead to undesirable situations. We discussed this problem when we talked about whether we want our trait implementations to leak.
+The downsides of `impl Trait` are known, and a few people pointed out that encouraging the use of `impl Trait` in more places could lead to undesirable situations. We discussed this problem when we talked about whether we want our trait implementations to leak, and I think that `as impl Trait` alleviates many of these concerns by preserving the concrete type information.
 
 ### Bikeshedding: `impl` vs `type`
 
@@ -79,7 +79,7 @@ There seem to be some strong opinions about which syntax would be better. `impl 
 
 ### An unclear future for `impl Trait`
 
-A really poignant critique of the RFC was that the original failed because many people wanted different futures for it. This RFC was effectively just the lowest common denominator, but doesn't resolve the question of which future `impl Trait` should have. That is the core of the question I want to answer.
+A really poignant critique of the RFC was that the original failed because many people wanted different futures for it. This RFC was effectively just the lowest common denominator, but doesn't resolve the question of which future `impl Trait` should have. This is exactly the same problem that I aim to address with `as impl Trait`.
 
 ### `for` blocks
 
@@ -107,7 +107,7 @@ This doesn't include the concrete underlying type, and so I think this would be 
 
 ```rust
 let displayable: &'static str as impl Display = "Hello, world!";
-// or
+// or, with variable type inference
 let displayable: _ as impl Display = "Hello, world!";
 ```
 
@@ -120,7 +120,7 @@ const DISPLAYABLE: &'static str = "Hello, world!";
 const DISPLAYABLE: &'static str as impl Display = "Hello, world!";
 ```
 
-And can handle unnameable types with local inference if you let it:
+And can handle unnameable types with local inference:
 
 ```rust
 const MY_CLOSURE: _ as impl Fn(i32) -> i32 = |x| x + 1;
@@ -132,14 +132,14 @@ This section in particular muddies the water with `impl Trait`. The introduction
 
 I believe that inferring this concrete type is a mistake, and leads to the same inference issues discussed in the last post. Additionally, there is a large focus on not naming the concrete type to prevent trait impls from leaking. However I think this confuses the abstraction of a type with the naming of it. It's clearer to name a type and explicitly abstract it.
 
-Fundamentally, I believe that existential types are a less clear formulation of `as impl Trait`. That's a very subjective opinion. I'll save any further discussion for the final post.
+Fundamentally, I believe that existential types are a less clear formulation of `as impl Trait`. That's a very subjective opinion.
 
 ## Type alias impl trait
 
-Finally, [this RFC](https://rust-lang.github.io/rfcs/2515-type_alias_impl_trait.html) is nice and light. It simply builds on the existential types RFC by explicitly setting the syntax to use `impl Trait`. There is a lot of language lawyering and nailing down the very specific semantics, and it does a good job of explaining why additional syntax hinders learnability and results in confusion. Overall, I like this RFC but I think we can do better.
+Finally, [this RFC](https://rust-lang.github.io/rfcs/2515-type_alias_impl_trait.html) is nice and light. It simply builds on the existential types RFC by explicitly setting the syntax to use `impl Trait`. There is a lot of language lawyering and nailing down the very specific semantics, and it does a good job of explaining why additional syntax hinders learnability and results in confusion. We've already discussed the pros and cons of this RFC extensively, and I think we can do better.
 
 ## Conclusion
 
-`impl Trait` has taken a long journey to reach where it is now. Along the way there has been great ambition, as well as great confusion. For some, `impl Trait` has the promise of becoming as great as its original ambition. For others, the idea that it could do that is unthinkable. I cannot stress enough that there are very strong convictions on both sides, and I suspect that I will probably raise some of these tensions from the dead.
+`impl Trait` has taken a long journey to reach where it is now. Along the way there has been great ambition, as well as great confusion. I understand that there are very strong convictions on both sides, and I hope that we can use this as an opportunity to finally resolve them.
 
-In my [final post](@/blog/abstract_types_in_rust_4.md), I hope to bring the past three posts together into a coherent framework and provide a final recommendation on what should be done with `impl Trait`. If you've made it this far, I appreciate it a lot and hope you can hang on for just a little while longer.
+In my [final post](@/blog/a_new_impl_trait_4.md), I hope to bring the past three posts together into a coherent framework and provide a final recommendation on what should be done with `impl Trait`. If you've made it this far, I appreciate it a lot and hope you can hang on for just a little while longer.

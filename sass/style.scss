@@ -152,19 +152,16 @@ li {
 }
 
 * > .footnote {
-    border-top: 0.15rem solid $black;
+    border-top: 0.2rem solid $black;
     margin: {
-        top: 1rem;
+        top: 2rem;
         bottom: 1rem;
     }
+    padding-top: 2rem;
     text-indent: 0;
 }
 
-* > .footnote ~ .footnote {
-    border-top: 0;
-}
-
-.footnote a {
+.footnote a:first-child {
     text-decoration: none;
     text-align: right;
     min-width: 1.5em;
@@ -172,7 +169,7 @@ li {
     margin-right: 0.5rem;
 }
 
-.footnote a::after {
+.footnote a:first-child::after {
     content: ".";
 }
 
