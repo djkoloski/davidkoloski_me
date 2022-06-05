@@ -123,7 +123,7 @@ println!("{}", combine_abstract(1, 2));
 println!("{:?}", combine_abstract(1, 2));
 ```
 
-Now we have _abstracted_ our return type using `impl Trait`, and that opaque return type does not implement `Debug`. Note that we also had to bound `T::Output: Display` since our `impl Debug` requires that the value inside of it implements `Debug`. While we can still `Display` the return value of `combine_abstract`, we can no longer `Debug` it. That's the very literal difference when using `impl Trait`, but what does that actually mean for our code?
+Now we have _abstracted_ our return type using `impl Trait`, and that opaque return type does not implement `Debug`. Note that we also had to bound `T::Output: Display` since our `impl Display` requires that the value inside of it implements `Display`. While we can still `Display` the return value of `combine_abstract`, we can no longer `Debug` it. That's the very literal difference when using `impl Trait`, but what does that actually mean for our code?
 
 ## Should you abstract your types?
 
