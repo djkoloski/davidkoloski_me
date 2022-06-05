@@ -103,7 +103,7 @@ Before we put these ideas together into a coherent proposal, I'd like to address
 
 In the [last post](@/blog/a_new_impl_trait_1.md), we looked at "Return position `impl Trait` in traits" (RPITIT) and "Type alias `impl Trait`" (TAIT). To be clear, I don't think either of these proposals are bad. I just think they miss the mark, and it's not their fault. Here's why:
 
-When we desugar return position `impl Trait`, it gets hidden in a wrapper type and that _type_ is abstract. In fact, that type is _an abstraction_ over the concrete type. I argue that we're missing that extra informaiton, and that is leading us down the path of type inference. Instead of declaring our type aliases and leveraging those for inference, we instead have to declare our alias and then be painfully specific everywhere that we use it:
+When we desugar return position `impl Trait`, it gets hidden in a wrapper type and that _type_ is abstract. In fact, that type is _an abstraction_ over the concrete type. I argue that we're missing that extra information, and that is leading us down the path of type inference. Instead of declaring our type aliases and leveraging those for inference, we instead have to declare our alias and then be painfully specific everywhere that we use it:
 
 ```rust
 #![feature(type_alias_impl_trait)]
