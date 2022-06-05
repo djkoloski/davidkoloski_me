@@ -121,7 +121,7 @@ fn b() -> Handle {
 }
 ```
 
-If you thought that this would compile, I don't blame you! We should have all the information we need to deduce that `Integer` is an abstract pointer to an `i32`. However, that's not what we get:
+If you thought that this would compile, I don't blame you! We should have all the information we need to deduce that `Handle` is an abstract pointer to an `i32`. However, that's not what we get:
 
 ```
 error[E0282]: type annotations needed
@@ -131,7 +131,7 @@ error[E0282]: type annotations needed
    |     ^^^^ cannot infer type for type parameter `T` declared on the function `null`
 ```
 
-This is because we're inferring the type of `Integer`, and we don't want to accidentally infer the wrong type in a situation where we're _actually_ confused. Compare this to a concrete type alias:
+This is because we're inferring the type of `Handle`, and we don't want to accidentally infer the wrong type in a situation where we're _actually_ confused. Compare this to a concrete type alias:
 
 ```rust
 #![feature(type_alias_impl_trait)]
