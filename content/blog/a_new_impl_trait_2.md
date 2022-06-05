@@ -103,7 +103,7 @@ Before we put these ideas together into a coherent proposal, I'd like to address
 
 In the [last post](@/blog/a_new_impl_trait_1.md), we looked at "Return position `impl Trait` in traits" (RPITIT) and "Type alias `impl Trait`" (TAIT). To be clear, I don't think either of these proposals are bad. I just think they miss the mark, and it's not their fault. Here's why:
 
-When we desugar return position `impl Trait`, it gets hidden in a wrapper type and that _type_ is abstract. In fact, that type is _an abstraction_ over the concrete type. I argue that we're missing that extra informaiton, and that is leading us down the path of type inference. Instead of declaring our type aliases and leveraging those for inference, we instead have to declare our alias and then be painfully specific everywhere that we use it:
+When we desugar return position `impl Trait`, it gets hidden in a wrapper type and that _type_ is abstract. In fact, that type is _an abstraction_ over the concrete type. I argue that we're missing that extra information, and that is leading us down the path of type inference. Instead of declaring our type aliases and leveraging those for inference, we instead have to declare our alias and then be painfully specific everywhere that we use it:
 
 ```rust
 #![feature(type_alias_impl_trait)]
@@ -121,7 +121,7 @@ fn b() -> Handle {
 }
 ```
 
-If you thought that this would compile, I don't blame you! We should have all the information we need to deduce that `Integer` is an abstract pointer to an `i32`. However, that's not what we get:
+If you thought that this would compile, I don't blame you! We should have all the information we need to deduce that `Handle` is an abstract pointer to an `i32`. However, that's not what we get:
 
 ```
 error[E0282]: type annotations needed
@@ -131,7 +131,7 @@ error[E0282]: type annotations needed
    |     ^^^^ cannot infer type for type parameter `T` declared on the function `null`
 ```
 
-This is because we're inferring the type of `Integer`, and we don't want to accidentally infer the wrong type in a situation where we're _actually_ confused. Compare this to a concrete type alias:
+This is because we're inferring the type of `Handle`, and we don't want to accidentally infer the wrong type in a situation where we're _actually_ confused. Compare this to a concrete type alias:
 
 ```rust
 #![feature(type_alias_impl_trait)]
