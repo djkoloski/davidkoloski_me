@@ -45,7 +45,7 @@ If `foo`'s return type is inferred, then `bar` must either:
 
 A type alias doesn't change the situation here, as it would also either state `type Output = <foo as Fn(T)>::Output` or `type Output = _`.
 
-If we infer the return type of `bar` from its body, we end up long-range type inference and spooky action at a distance. This has the additional downside that it opens the door for inference to be used in places where it's not strictly necessary. This could lead to further confusion and, in my opinion, would render the feature more harm than good.
+If we infer the return type of `bar` from its body, we end up long-range type inference and spooky action at a distance. This has the additional downside that it opens the door for inference to be used in places where it's not strictly necessary. This could lead to further confusion and, in my opinion, would render the feature more harmful than helpful.
 
 If we refer to `foo` to name `bar`'s return type, we end up with `foo` only performing local inference which is arguably better. However, we suffer from the explicit function output signature, especially when we want to change the definition of `foo`. Modifying its arguments would require modifying the type signature of `bar` (or equivalently, the signature of the type alias) even when the return type has not changed. It makes maintenance more difficult at the same time as making discoverability more difficult.
 
