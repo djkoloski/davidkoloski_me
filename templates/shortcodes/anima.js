@@ -1,4 +1,4 @@
-const PLAYGROUND_URL = 'http://davidkoloski.me/blog/anima-playground'
+const PLAYGROUND_URL = 'http://david.kolo.ski/blog/anima-playground'
 
 window.addEventListener('load', async (event) => {
   await wasm_bindgen('/wasm/anima_solver_bg.wasm')

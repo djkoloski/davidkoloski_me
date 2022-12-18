@@ -33,4 +33,4 @@ Humans are social creatures, and we always have been. The internet is incredibly
 
 ## Contact me
 
-You can reach me [by email](mailto:me@davidkoloski.me), follow me [on twitter](http://twitter.com/david_koloski), find me [on github](http://github.com/djkoloski), or connect with me [on LinkedIn](https://www.linkedin.com/in/dkoloski/).
+You can reach me [by email](mailto:david@kolo.ski), follow me [on mastodon](http://hachyderm.io/@djkoloski), find me [on github](http://github.com/djkoloski), or connect with me [on LinkedIn](https://www.linkedin.com/in/dkoloski/).

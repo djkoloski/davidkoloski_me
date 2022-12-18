@@ -135,7 +135,7 @@ I atttended RPI for three and a half years, earning Bachelor's degrees in Comput
 
 ## Contact
 
-- [me@davidkoloski.me](mailto:me@davidkoloski.me)
+- [david@kolo.ski](mailto:david@kolo.ski)
 - [github.com/djkoloski](http://github.com/djkoloski)
-- [twitter.com/david_koloski](http://twitter.com/david_koloski)
+- [hachyderm.io/@djkoloski](http://hachyderm.io/@djkoloski)
 - [linkedin.com/in/dkoloski](http://linkedin.com/in/dkoloski)
