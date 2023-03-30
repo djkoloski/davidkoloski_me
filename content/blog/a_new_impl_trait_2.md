@@ -93,7 +93,7 @@ where
 }
 ```
 
-We know that `MyClosure` is actually the type of `move || value`, but nobody else who glances at our source code will know that. It's not in our function signature, it's not at the alias declaration site, it's all inferred from our surroundings. And yet, we're now exposing the concrete properties of our closure to everyone. It's a recipe for server violations.
+We know that `MyClosure` is actually the type of `move || value`, but nobody else who glances at our source code will know that. It's not in our function signature, it's not at the alias declaration site, it's all inferred from our surroundings. And yet, we're now exposing the concrete properties of our closure to everyone. It's a recipe for semver violations.
 
 Some of these cases could be mitigated by linting. Places where type inference is used in return position, but the return type can be named. That would keep `impl Trait` just for cases where we want to abstract the return type and type inference just for cases where we can't name the type.
 

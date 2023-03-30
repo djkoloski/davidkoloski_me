@@ -20,7 +20,7 @@ I believe that the current implementation of `impl Trait` is confusing and non-o
 
 ## What is `impl Trait`?
 
-`impl Trait` is syntax sugar can be used in argument position or in return position. Let's look at how it can be used and how it desugars to more fundamental Rust syntax.
+`impl Trait` is syntax sugar that can be used in argument position or in return position. Let's look at how it can be used and how it desugars to more fundamental Rust syntax.
 
 ### Argument position
 
