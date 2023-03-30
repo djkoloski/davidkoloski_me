@@ -10,19 +10,76 @@ Software engineer, game designer, and web developer.
 
 ## Experience
 
+### Open-source Rust
+
+- November 2020 - Present
+
+I do a lot of open-source work on and in Rust. Some of the highlights:
+
+- [rkyv] is a zero-copy deserialization framework for Rust. It was my first
+  major project in Rust and continues to be widely used in the Rust community.
+- [bytecheck] is a runtime struct validation framework built for use with rkyv.
+  It's general-purpose but is primarily used by rkyv to perform type validation
+  on arbitrary byte buffers.
+- I'm currently working on [rel], an object system for Rust based on relative
+  pointers. It has a lot of promise but still has a lot of work yet to be done.
+- I maintain a suite of [Rust serialization benchmarks] aimed to provide
+  high-quality unbiased data on the relative performance of various
+  serialization frameworks.
+- I'm also very happy with my Rust destructuring library [munge].
+- I also occasionally help improve and maintain [zerocopy].
+
+[rkyv]: https://github.com/rkyv/rkyv
+[bytecheck]: https://github.com/rkyv/bytecheck
+[rel]: https://github.com/rkyv/rel
+[Rust serialization benchmarks]: https://github.com/djkoloski/rust_serialization_benchmark
+[munge]: https://github.com/djkoloski/munge
+[zerocopy]: https://github.com/google/zerocopy
+
 ### Rust on Fuchsia
 
 - October 2021 - Present
 - Google, New York NY
 
 I'm currently working at Google on the Rust on Fuchsia team.
+- I help maintain our Rust toolchain; diagnosing, reporting, and fixing issues
+  we find while testing the latest nightlies on our codebase.
+- A major project I worked on was building Rust's
+  [compiler test suite runner for Fuchsia]. The runner is a python script that
+  starts, configures, and runs test binaries on a Fuchsia emulator.
+- Along with the test suite runner, I also worked on fixing and improving Rust's
+  standard library support for Fuchsia, filling feature gaps, documenting
+  platform differences, and [writing documentation] on how to run Rust on
+  Fuchsia emulators. All of this culminated in bringing Fuchsia up to Rust's
+  standards for a Tier 2 platform (we were previously grandfathered in, and
+  could have been demoted to Tier 3).
+- I also improved and formalized our unsafe code review processes. We review a
+  lot of unsafe code, and make a concerted effort to prevent undefined behavior
+  from entering our build via third-party sources. I lead a group of unsafe code
+  reviewers in prioritizing, reviewing, and submitting patches upstream for
+  third-party crates that we use on Fuchsia.
+- Alongside unsafe code review, I'm currently working to formalize our crate
+  auditing results and make them available for other internal and external
+  projects to use. These secure our supply chain while reducing the amount of
+  work we have to do individually and improving our auditing quality.
+- I'm also currently helping to write and open-source Google's
+  [unsafe Rust onboarding materials], which are aimed at bringing Rust
+  programmers up to a consistent level of expertise for reviewing unsafe code.
+
+[compiler test suite runner for Fuchsia]: https://github.com/rust-lang/rust/blob/master/src/ci/docker/scripts/fuchsia-test-runner.py
+[writing documentation]: https://doc.rust-lang.org/nightly/rustc/platform-support/fuchsia.html
+[unsafe Rust onboarding materials]: https://github.com/google/learn_unsafe_rust
 
 ### Unreleased Project (Robot Entertainment)
 
 - August 2020 - August 2021
 - Robot Entertainment, Dallas TX
 
-I worked at Robot Entertainment on an unreleased project. More details when it's released.
+I worked at Robot Entertainment on a canceled project.
+I did most of my work on building a realtime, scalable dungeon generation
+system. The PGC algorithm was initially written in Rust, then C++. Both versions
+were integrated into UE4 so that artists and designers were able to interact
+with the system through the editor UI.
 
 ### Orcs Must Die! 3
 
