@@ -3,7 +3,7 @@ base_url = "https://david.kolo.ski"
 title = "David Koloski"
 description = "Software Engineer, Game Designer, Web Developer"
 
-generate_feed = true
+generate_feeds = true
 
 taxonomies = [
     {name = "categories", rss = true},
