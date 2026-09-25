@@ -8,7 +8,9 @@ categories = ["rust"]
 tags = ["rust", "puzzles"]
 +++
 
-{% anima(dynamic=true) %}
+{{ <enable_anima /> }}
+
+{% <anima dynamic={true}> %}
 {
     "name": "Square Dance",
     "width": 5,
@@ -44,9 +46,9 @@ tags = ["rust", "puzzles"]
     ],
     "optimalMoves": 12
 }
-{% end %}
+{% </anima> %}
 
-{% center() %}
+{% <center> %}
 
 ### Controls
 
@@ -55,4 +57,4 @@ tags = ["rust", "puzzles"]
 - **Reset**: Shift + Space (desktop), bottom left button
 - **Unfocus**: Escape (desktop), click away, tap (mobile)
 
-{% end %}
+{% </center> %}

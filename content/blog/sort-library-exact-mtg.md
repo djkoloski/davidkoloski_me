@@ -10,13 +10,15 @@ tags = ["mtg", "puzzles"]
 
 [Today's daily ruling](https://www.youtube.com/watch?v=uhZnHJBH4Ag) on [Judging FtW](https://www.youtube.com/@JudgingFtW) proposed an interesting question that lies at the intersection of mathematics, computer science, and tournament play policy. Take a look at these two cards:
 
-{% center() %}
+{% <center> %}
 
-{{ resize_image(path="/blog/sort-library-steps-mtg/omniscience.jpg", width=300, height=300, op="fit_width") }}
+{% set image = resize_image(path="/blog/sort-library-steps-mtg/omniscience.jpg", width=300, height=300, op="fit_width") %}
+<img src="{{ image.url }}" />
 
-{{ resize_image(path="/blog/sort-library-steps-mtg/petals-of-insight.jpg", width=300, height=300, op="fit_width") }}
+{% set image = resize_image(path="/blog/sort-library-steps-mtg/petals-of-insight.jpg", width=300, height=300, op="fit_width") %}
+<img src="{{ image.url }}" />
 
-{% end %}
+{% </center> %}
 
 Omniscience allows you to cast Petals of Insight without paying its mana cost, and you can choose to return Petals to your hand after it resolves.
 

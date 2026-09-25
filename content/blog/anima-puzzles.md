@@ -8,7 +8,9 @@ categories = ["rust"]
 tags = ["rust", "puzzles"]
 +++
 
-{% center() %}
+{{ <enable_anima /> }}
+
+{% <center> %}
 
 ### Controls
 
@@ -17,9 +19,9 @@ tags = ["rust", "puzzles"]
 - **Reset**: Shift + Space (desktop), bottom left button
 - **Unfocus**: Escape (desktop), click away, tap (mobile)
 
-{% end %}
+{% </center> %}
 
-{% anima() %}
+{% <anima> %}
 {
     "name": "Line Dance",
     "width": 3,
@@ -36,9 +38,9 @@ tags = ["rust", "puzzles"]
     ],
     "optimalMoves": 2
 }
-{% end %}
+{% </anima> %}
 
-{% anima() %}
+{% <anima> %}
 {
     "name": "U-Turn",
     "width": 3,
@@ -57,9 +59,9 @@ tags = ["rust", "puzzles"]
     ],
     "optimalMoves": 6
 }
-{% end %}
+{% </anima> %}
 
-{% anima() %}
+{% <anima> %}
 {
     "name": "Spiral",
     "width": 5,
@@ -80,9 +82,9 @@ tags = ["rust", "puzzles"]
     ],
     "optimalMoves": 16
 }
-{% end %}
+{% </anima> %}
 
-{% anima() %}
+{% <anima> %}
 {
     "name": "Single File",
     "width": 5,
@@ -116,9 +118,9 @@ tags = ["rust", "puzzles"]
     ],
     "optimalMoves": 16
 }
-{% end %}
+{% </anima> %}
 
-{% anima() %}
+{% <anima> %}
 {
     "name": "Oblique",
     "width": 5,
@@ -154,9 +156,9 @@ tags = ["rust", "puzzles"]
     ],
     "optimalMoves": 10
 }
-{% end %}
+{% </anima> %}
 
-{% anima() %}
+{% <anima> %}
 {
     "name": "Cycle",
     "width": 5,
@@ -192,9 +194,9 @@ tags = ["rust", "puzzles"]
     ],
     "optimalMoves": 13
 }
-{% end %}
+{% </anima> %}
 
-{% anima() %}
+{% <anima> %}
 {
     "name": "Octothorpe",
     "width": 5,
@@ -250,9 +252,9 @@ tags = ["rust", "puzzles"]
     ],
     "optimalMoves": 7
 }
-{% end %}
+{% </anima> %}
 
-{% anima() %}
+{% <anima> %}
 {
     "name": "Square Dance",
     "width": 5,
@@ -288,9 +290,9 @@ tags = ["rust", "puzzles"]
     ],
     "optimalMoves": 12
 }
-{% end %}
+{% </anima> %}
 
-{% anima() %}
+{% <anima> %}
 {
     "name": "Centralize",
     "width": 5,
@@ -328,9 +330,9 @@ tags = ["rust", "puzzles"]
     ],
     "optimalMoves": 15
 }
-{% end %}
+{% </anima> %}
 
-{% anima() %}
+{% <anima> %}
 {
     "name": "Unwind",
     "width": 5,
@@ -351,9 +353,9 @@ tags = ["rust", "puzzles"]
     ],
     "optimalMoves": 16
 }
-{% end %}
+{% </anima> %}
 
-{% anima() %}
+{% <anima> %}
 {
     "name": "Spinlock",
     "width": 5,
@@ -389,9 +391,9 @@ tags = ["rust", "puzzles"]
     ],
     "optimalMoves": 11
 }
-{% end %}
+{% </anima> %}
 
-{% anima() %}
+{% <anima> %}
 {
     "name": "Gimbal Lock",
     "width": 7,
@@ -415,9 +417,9 @@ tags = ["rust", "puzzles"]
     ],
     "optimalMoves": 6
 }
-{% end %}
+{% </anima> %}
 
-{% anima() %}
+{% <anima> %}
 {
     "name": "Deadlock",
     "width": 3,
@@ -446,9 +448,9 @@ tags = ["rust", "puzzles"]
     ],
     "optimalMoves": 6
 }
-{% end %}
+{% </anima> %}
 
-{% anima() %}
+{% <anima> %}
 {
     "name": "Sideswipe",
     "width": 5,
@@ -484,9 +486,9 @@ tags = ["rust", "puzzles"]
     ],
     "optimalMoves": 10
 }
-{% end %}
+{% </anima> %}
 
-{% anima() %}
+{% <anima> %}
 {
     "name": "Untangle",
     "width": 5,
@@ -521,9 +523,9 @@ tags = ["rust", "puzzles"]
     ],
     "optimalMoves": 11
 }
-{% end %}
+{% </anima> %}
 
-{% anima() %}
+{% <anima> %}
 {
     "name": "Traffic Circle",
     "width": 5,
@@ -557,9 +559,9 @@ tags = ["rust", "puzzles"]
     ],
     "optimalMoves": 8
 }
-{% end %}
+{% </anima> %}
 
-{% anima() %}
+{% <anima> %}
 {
     "name": "Close Quarters",
     "width": 4,
@@ -593,9 +595,9 @@ tags = ["rust", "puzzles"]
     ],
     "optimalMoves": 11
 }
-{% end %}
+{% </anima> %}
 
-{% anima() %}
+{% <anima> %}
 {
     "name": "Fractal",
     "width": 5,
@@ -633,9 +635,9 @@ tags = ["rust", "puzzles"]
     ],
     "optimalMoves": 13
 }
-{% end %}
+{% </anima> %}
 
-{% anima() %}
+{% <anima> %}
 {
     "name": "Box Step",
     "width": 5,
@@ -669,9 +671,9 @@ tags = ["rust", "puzzles"]
     ],
     "optimalMoves": 15
 }
-{% end %}
+{% </anima> %}
 
-{% anima() %}
+{% <anima> %}
 {
     "name": "Inversion",
     "width": 3,
@@ -709,9 +711,9 @@ tags = ["rust", "puzzles"]
     ],
     "optimalMoves": 14
 }
-{% end %}
+{% </anima> %}
 
-{% anima() %}
+{% <anima> %}
 {
     "name": "Free Radical",
     "width": 5,
@@ -752,9 +754,9 @@ tags = ["rust", "puzzles"]
     ],
     "optimalMoves": 19
 }
-{% end %}
+{% </anima> %}
 
-{% anima() %}
+{% <anima> %}
 {
     "name": "Side Channel",
     "width": 4,
@@ -785,9 +787,9 @@ tags = ["rust", "puzzles"]
     ],
     "optimalMoves": 20
 }
-{% end %}
+{% </anima> %}
 
-{% anima() %}
+{% <anima> %}
 {
     "name": "Antiparticle",
     "width": 5,
@@ -828,4 +830,4 @@ tags = ["rust", "puzzles"]
     ],
     "optimalMoves": 22
 }
-{% end %}
+{% </anima> %}

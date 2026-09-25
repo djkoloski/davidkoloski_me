@@ -22,7 +22,12 @@ We've been breezing through many different examples and suggestions without real
 
 ### The lesser of two evils
 
-In this case, the two evils are **type inference** and **named unnameable types**. In order for `as impl Trait` to function, we must choose one of these. Note that we have already chosen one of these (type inference) with `impl Trait`. I personally think that return type inference is simpler but less in line with Rust's goals{{ citation() }}. Let's consult a motivating example:
+In this case, the two evils are **type inference** and **named unnameable types**. In order for `as impl Trait` to function, we must choose one of these. Note that we have already chosen one of these (type inference) with `impl Trait`. I personally think that return type inference is simpler but less in line with Rust's goals[^1]. Let's consult a motivating example:
+
+[^1]: Don't get me wrong, I actually like type inference and use it all the time. However, I think of Rust's typing philosophy as a kind of ["stabilized inference"](https://en.wikipedia.org/wiki/Mechanically_stabilized_earth) model.
+  In geotechnical engineering, it's common practice to use regular soil for building retaining walls, seawalls, and dikes. However, soil alone is not very strong and can easily flow when exposed to movement or water. A seawall made of plain soil would very quickly collapse from the soil shifting and flowing, but we can fix that by adding "_reinforcement_" to it. These are layers within the soil that provide stiffness and friction to prevent the soil from moving. It's kind of like a dirt sandwich with many layers, and it's [surprisingly effective](https://www.youtube.com/watch?v=0olpSN6_TCc).
+  I think of Rust's type inference like the soil: it's on-site, abundant, and a natural choice for construction. But it has a tendency to shift and flow because it's only loosely held together. In large quantities it can quickly shift and flow when exposed to change. Likewise, I think of function signatures as the reinforcement. It's not a lot of material, but it's stiff and prevents the type inference inside of function bodies from moving too much. Just this little bit of added stiffness prevents changes from propagating across function boundaries, keeping the system as a whole stable.
+  This is why I like type inference in statements, but I'm not a fan of type inference in function signatures.
 
 ```rust
 fn foo<T>(value: T) -> ?? {
@@ -213,13 +218,3 @@ Whew, that was a lot of work. Hopefully I've inspired some new ideas and thought
 ### Thanks
 
 Thanks to [@computerdruid](https://github.com/computerdruid) and [@tmandry](https://github.com/tmandry) in particular for reviewing this series of posts and helping me hone my understanding of `impl Trait`.
-
-{% footnote() %}
-Don't get me wrong, I actually like type inference and use it all the time. However, I think of Rust's typing philosophy as a kind of ["stabilized inference"](https://en.wikipedia.org/wiki/Mechanically_stabilized_earth) model.
-
-In geotechnical engineering, it's common practice to use regular soil for building retaining walls, seawalls, and dikes. However, soil alone is not very strong and can easily flow when exposed to movement or water. A seawall made of plain soil would very quickly collapse from the soil shifting and flowing, but we can fix that by adding "_reinforcement_" to it. These are layers within the soil that provide stiffness and friction to prevent the soil from moving. It's kind of like a dirt sandwich with many layers, and it's [surprisingly effective](https://www.youtube.com/watch?v=0olpSN6_TCc).
-
-I think of Rust's type inference like the soil: it's on-site, abundant, and a natural choice for construction. But it has a tendency to shift and flow because it's only loosely held together. In large quantities it can quickly shift and flow when exposed to change. Likewise, I think of function signatures as the reinforcement. It's not a lot of material, but it's stiff and prevents the type inference inside of function bodies from moving too much. Just this little bit of added stiffness prevents changes from propagating across function boundaries, keeping the system as a whole stable.
-
-This is why I like type inference in statements, but I'm not a fan of type inference in function signatures.
-{% end %}

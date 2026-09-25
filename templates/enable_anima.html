@@ -1,0 +1,362 @@
+{% component enable_anima() %}
+{% set solver_js = load_data(path="../templates/anima/anima_solver.js", format="plain") %}
+<script>
+    {{ solver_js | safe }}
+</script>
+{% set anima_js = load_data(path="../templates/anima/anima.js", format="plain") %}
+<script>
+    {{ anima_js | safe }}
+</script>
+<template id="anima-puzzle-template">
+    <div class="spacer"></div>
+    <div class="board-container">
+        <h3 data-ref="name"></h3>
+        <div class="controls">
+            <div class="left">
+                <button data-ref="undo">
+                    <img src="data:image/svg+xml,%3Csvg width='24px' height='24px' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7.18,4,8.6,5.44,6.06,8h9.71a6,6,0,0,1,0,12h-2V18h2a4,4,0,0,0,0-8H6.06L8.6,12.51,7.18,13.92,2.23,9Z' /%3E%3C/svg%3E%0A">
+                </button>
+                <button data-ref="reset">
+                    <img src="data:image/svg+xml,%3Csvg width='24px' height='24px' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='none' stroke='%23000' stroke-width='2' d='M20,8 C18.5974037,5.04031171 15.536972,3 12,3 C7.02943725,3 3,7.02943725 3,12 C3,16.9705627 7.02943725,21 12,21 L12,21 C16.9705627,21 21,16.9705627 21,12 M21,3 L21,9 L15,9'/%3E%3C/svg%3E%0A">
+                </button>
+            </div>
+            <div class="right">
+                <button data-ref="link">
+                    <img src="data:image/svg+xml,%3Csvg width='24px' height='24px' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='none' stroke='%23000' stroke-width='2' d='M16.1251884,2.42026615 C16.9095797,1.63587482 18.1818354,1.63638083 18.9643331,2.41887857 L21.5811214,5.03566688 C22.3647464,5.81929188 22.3723943,7.08215115 21.5797338,7.87481161 L17.8748116,11.5797338 C17.0904203,12.3641252 15.8181646,12.3636192 15.0356669,11.5811214 L12.4188786,8.96433312 C11.6352536,8.18070812 11.6276057,6.91784885 12.4202662,6.12518839 L16.1251884,2.42026615 Z M6.12518839,12.4202662 C6.90957973,11.6358748 8.18183538,11.6363808 8.96433312,12.4188786 L11.5811214,15.0356669 C12.3647464,15.8192919 12.3723943,17.0821512 11.5797338,17.8748116 L7.87481161,21.5797338 C7.09042027,22.3641252 5.81816462,22.3636192 5.03566688,21.5811214 L2.41887857,18.9643331 C1.63525357,18.1807081 1.6276057,16.9178488 2.42026615,16.1251884 L6.12518839,12.4202662 Z M7,17 L17,7'/%3E%3C/svg%3E%0A">
+                </button>
+            </div>
+        </div>
+        <div data-ref="board" tabindex="0"></div>
+        <span data-ref="focuser">
+            Click to play
+        </span>
+        <div>
+            <span data-ref="moves">0</span><span class="optimal-threshold"> / <span data-ref="optimalMoves">0</span></span> moves
+        </div>
+    </div>
+    <div data-ref="controls">
+        <div class="import">
+            <input type="text" data-ref="importInput">
+            <button data-ref="importButton">Import</button>
+        </div>
+        <div data-ref="solution">
+            <em>Solve to find a solution</em>
+        </div>
+        <div class="solve">
+            <input type="checkbox" data-ref="autoSolve"/>Auto
+            <button data-ref="solveButton">Solve</button>
+            <span data-ref="solveTime">0.000s</span>
+        </div>
+    </div>
+    <div class="spacer"></div>
+    <style>
+        :host {
+            display: flex;
+            align-items: stretch;
+            margin: 0.5rem auto;
+            overflow-x: auto;
+        }
+        .spacer {
+            flex-grow: 1;
+        }
+        .board-container {
+            text-align: center;
+            flex-shrink: 0;
+            padding: 0 32px;
+        }
+        [data-ref="focuser"] {
+            display: inline-block;
+            position: relative;
+            top: -0.3rem;
+            padding: 0 0.5rem;
+            background-color: #fff;
+            border-radius: 0.75rem;
+            box-shadow: 0 0 7px rgba(0, 0, 0, 0.5);
+            z-index: 1;
+            cursor: pointer;
+            transform: scale(1);
+            transition: transform 0.15s cubic-bezier(.18, .85, .67, 1.53);
+        }
+        :host(.active) [data-ref="focuser"] {
+            transform: scale(0.0);
+            transition: transform 0.1s linear;
+        }
+        .optimal-threshold {
+            display: none;
+            font-weight: bold;
+        }
+        :host(.was-solved) .optimal-threshold {
+            display: inline;
+        }
+        :host(.was-solved.was-optimal) .optimal-threshold::after {
+            content: " ✔";
+            color: #006600;
+        }
+        .controls {
+            display: flex;
+            position: relative;
+            height: 0;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+        .controls .left, .controls .right {
+            position: relative;
+            top: -10px;
+            display: flex;
+            flex-direction: column;
+        }
+        .controls .left {
+            left: -34px;
+        }
+        .controls .right {
+            right: -34px;
+        }
+        @keyframes bounce1 {
+            0% {
+                transform: scale(1.0);
+            }
+            30% {
+                transform: scale(1.2);
+            }
+            60% {
+                transform: scale(0.8);
+            }
+            100% {
+                transform: scale(1.0);
+            }
+        }
+        @keyframes bounce2 {
+            0% {
+                transform: scale(1.0);
+            }
+            30% {
+                transform: scale(1.2);
+            }
+            60% {
+                transform: scale(0.8);
+            }
+            100% {
+                transform: scale(1.0);
+            }
+        }
+        [data-ref="reset"], [data-ref="undo"], [data-ref="link"] {
+            padding: 6px;
+            width: 36px;
+            height: 36px;
+            border-radius: 18px;
+            z-index: 3;
+            animation-duration: 0.2s;
+        }
+        [data-ref="reset"].one, [data-ref="undo"].one, [data-ref="link"].one {
+            animation-name: bounce1;
+        }
+        [data-ref="reset"].two, [data-ref="undo"].two, [data-ref="link"].two {
+            animation-name: bounce2;
+        }
+        [data-ref="board"] {
+            background-color: #e8e8e8;
+            background-image:
+                linear-gradient(135deg, #cccccc 25%, transparent 25%),
+                linear-gradient(225deg, #cccccc 25%, transparent 25%),
+                linear-gradient(45deg, #cccccc 25%, transparent 25%),
+                linear-gradient(315deg, #cccccc 25%, #e8e8e8 25%);
+            background-position: 18px 0, 18px 0, 0 0, 0 0;
+            background-size: 36px 36px;
+            background-repeat: repeat;
+            position: relative;
+            border-radius: 0.75rem;
+            border: 0.5rem solid transparent;
+            cursor: pointer;
+        }
+        :host(.active) [data-ref="board"] {
+            cursor: default;
+        }
+        [data-ref="board"]::before {
+            content: " ";
+            position: absolute;
+            left: -0.5rem;
+            right: -0.5rem;
+            top: -0.5rem;
+            bottom: -0.5rem;
+            border-radius: 0.75rem;
+            box-shadow: inset 0 0 7px rgba(0, 0, 0, 0.5);
+        }
+        [data-ref="board"]::after {
+            content: " ";
+            display: block;
+            background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='UTF-8'%3F%3E%3Csvg width='111.58' height='80.006' version='1.1' viewBox='0 0 111.57827 80.006501' xml:space='preserve' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='m110.45 22.652c-1.0152-0.76245-2.4134-0.75457-3.414 0.01636l-29.369 22.42-19.275-43.549c-0.91154-2.0522-4.2759-2.0522-5.1905 0l-19.501 44.05-29.113-22.898c-1.0055-0.78609-2.4116-0.8079-3.4359-0.053335-1.0279 0.76002-1.417 2.1164-0.95579 3.2989l20.226 52.262c0.4188 1.0928 1.4728 1.8085 2.6407 1.8085h65.462c1.177 0 2.2219-0.71275 2.6425-1.8085l20.224-52.262c0.45759-1.1825 0.0739-2.5243-0.94124-3.2843z' fill='%23ffd82b'/%3E%3C/svg%3E%0A");
+            background-position: center center;
+            background-repeat: no-repeat;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 120px;
+            height: 100px;
+            opacity: 0.8;
+            filter: drop-shadow(0 0 1rem rgba(0, 0, 0, 0.5));
+            transform-origin: center;
+            transform: translate(-50%, -50%) scale(0.0);
+            transition: transform 0.1s linear;
+            z-index: 3;
+        }
+        :host(.solved) [data-ref="board"]::after {
+            transform: translate(-50%, -50%) scale(1.0);
+            transition: transform 0.25s cubic-bezier(.18, .85, .67, 1.53);
+        }
+        .tile {
+            position: absolute;
+        }
+        .tile::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            width: 96%;
+            height: 96%;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 0.75rem;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        .tile::after {
+            content: " ";
+            display: block;
+            position: absolute;
+            width: 96%;
+            height: 96%;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 0.75rem;
+            background-color: #fff;
+            z-index: 1;
+        }
+        .tile.goal::after {
+            background-image:
+                linear-gradient(135deg, #fff 40%, transparent 40%),
+                linear-gradient(225deg, #fff 40%, transparent 40%),
+                linear-gradient(45deg, #fff 40%, transparent 40%),
+                linear-gradient(315deg, #fff 40%, transparent 40%);
+        }
+        .tile.goal.red::after {
+            background-color: #ff0046;
+        }
+        .tile.goal.blue::after {
+            background-color: #0989B2;
+        }
+        button, input {
+            padding: 0.25rem 0.5rem;
+            background-color: #fff;
+            border: 0;
+            border-radius: 0.75rem;
+            box-shadow: 0 0 7px rgba(0, 0, 0, 0.5);
+            font-family: inherit;
+            font-size: inherit;
+            margin: 0.25rem;
+        }
+        button {
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #e0e0e0;
+        }
+        button:active {
+            background-color: #ccc;
+            box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+        }
+        input[type="text"] {
+            width: 0;
+            flex-grow: 1;
+        }
+        [data-ref="controls"] {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            margin-left: 0.5rem;
+            margin-top: 1rem;
+        }
+        [data-ref="controls"].hidden {
+            display: none;
+        }
+        .import, .solve {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 0.5rem 0;
+        }
+        [data-ref="importInput"].error {
+            background: #ffb8cb;
+        }
+        [data-ref="solution"] {
+            min-width: 200px;
+            height: 0;
+            flex-grow: 1;
+            text-align: center;
+            overflow-y: auto;
+        }
+        [data-ref="solution"] table {
+            margin: 0 auto;
+            font-family: monospace;
+            font-weight: bold;
+        }
+        [data-ref="solution"] td {
+            padding: 0 0.5rem;
+            text-align: left;
+        }
+        [data-ref="solution"] td:first-child {
+            text-align: right;
+        }
+        [data-ref="solveButton"] {
+            margin: 0 0.75rem;
+        }
+        [data-ref="solveTime"] {
+            flex-grow: 1;
+        }
+    </style>
+</template>
+<template id="anima-actor-template">
+    <style>
+        :host {
+            display: block;
+            position: absolute;
+            transition: transform 0.15s;
+            z-index: 2;
+        }
+        .color {
+            display: block;
+            position: absolute;
+            overflow: hidden;
+            width: 81%;
+            height: 81%;
+            border-radius: 0.4rem;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .color::after {
+            content: " ";
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+        :host(.red) .color::after {
+            background-image:
+                linear-gradient(135deg, #ff0046 30%, transparent 30%),
+                linear-gradient(225deg, #ff0046 30%, transparent 30%),
+                linear-gradient(45deg, #ff0046 30%, transparent 30%),
+                linear-gradient(315deg, #ff0046 30%, transparent 30%);
+        }
+        :host(.blue) .color::after {
+            background-image:
+                linear-gradient(135deg, #0989B2 30%, transparent 30%),
+                linear-gradient(225deg, #0989B2 30%, transparent 30%),
+                linear-gradient(45deg, #0989B2 30%, transparent 30%),
+                linear-gradient(315deg, #0989B2 30%, transparent 30%);
+        }
+    </style>
+    <div class="color"></div>
+</template>
+{% endcomponent %}

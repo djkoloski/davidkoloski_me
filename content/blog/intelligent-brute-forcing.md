@@ -8,6 +8,8 @@ categories = ["rust"]
 tags = ["rust", "puzzles"]
 +++
 
+{{ <enable_anima /> }}
+
 ## A little background
 
 Back in college, I played a lot of *puzzle games*. When I talk about these kinds of games, I'm going
@@ -52,7 +54,7 @@ color. Actors are blocks, at most one per tile, that can be moved around the gri
 tiles. Each turn, you may move the actors in one of the four cardinal directions and they all slide
 together. Let's do a few to get a feel for it:
 
-{% center() %}
+{% <center> %}
 
 ### Controls
 
@@ -61,9 +63,9 @@ together. Let's do a few to get a feel for it:
 - **Reset**: Shift + Space (desktop), bottom left button
 - **Unfocus**: Escape (desktop), click away, tap (mobile)
 
-{% end %}
+{% </center> %}
 
-{% anima() %}
+{% <anima> %}
 {
     "name": "U-Turn",
     "width": 3,
@@ -82,9 +84,9 @@ together. Let's do a few to get a feel for it:
     ],
     "optimalMoves": 6
 }
-{% end %}
+{% </anima> %}
 
-{% anima() %}
+{% <anima> %}
 {
     "name": "Single File",
     "width": 5,
@@ -118,7 +120,7 @@ together. Let's do a few to get a feel for it:
     ],
     "optimalMoves": 16
 }
-{% end %}
+{% </anima> %}
 
 These two are pretty easy, but you might have noticed some implicit rules that make solving these
 puzzles nontrivial:
@@ -130,7 +132,7 @@ These side-effects make it very difficult (impossible?) to predict how the syste
 even a move or two, which is a hallmark of problems with high NP-complexity. We'll add one more
 twist to make it a little more interesting:
 
-{% anima() %}
+{% <anima> %}
 {
     "name": "Gimbal Lock",
     "width": 7,
@@ -154,12 +156,12 @@ twist to make it a little more interesting:
     ],
     "optimalMoves": 6
 }
-{% end %}
+{% </anima> %}
 
 Unlike red actors, blue actors move in the opposite direction you choose. If you choose left, blue
 actors will move right and vice-versa. This leads to one final implicit rule:
 
-{% anima() %}
+{% <anima> %}
 {
     "name": "Deadlock",
     "width": 3,
@@ -188,7 +190,7 @@ actors will move right and vice-versa. This leads to one final implicit rule:
     ],
     "optimalMoves": 6
 }
-{% end %}
+{% </anima> %}
 
 When they're right next to each other, red and blue actors can pass through each other to exchange
 positions. However, if they're separated by a single space, they'll try to move onto the same space
@@ -199,11 +201,11 @@ Before diving in, I'd definitely recommend trying out some more puzzles to get a
 some high-level techniques and to get better acquainted with the game. Don't worry about solving
 all of these, they can get very hard. Just work with them until you feel competent and confident.
 
-{% center() %}
+{% <center> %}
 
 ## [**Practice Puzzles**](/blog/anima-puzzles/)
 
-{% end %}
+{% </center> %}
 
 This is where we start writing our solver. You can follow along using the `start` tag on the
 [GitHub repo](https://github.com/djkoloski/anima_solver), which will start you with all of the
@@ -281,7 +283,7 @@ direction was moved to transition. When we get a successful transition, we crawl
 
 We're going to use a nice and simple one to test:
 
-{% anima() %}
+{% <anima> %}
 {
     "name": "Line Dance",
     "width": 3,
@@ -298,7 +300,7 @@ We're going to use a nice and simple one to test:
     ],
     "optimalMoves": 2
 }
-{% end %}
+{% </anima> %}
 
 ```sh
 $ cargo run -- puzzles/line_dance.txt
@@ -323,7 +325,7 @@ Right, Right
 Roughly twice as fast, great! We're going to be running exclusively in release mode from here on
 out. Now let's step it up a little bit and try a harder puzzle:
 
-{% anima() %}
+{% <anima> %}
 {
     "name": "U-Turn",
     "width": 3,
@@ -342,7 +344,7 @@ out. Now let's step it up a little bit and try a harder puzzle:
     ],
     "optimalMoves": 6
 }
-{% end %}
+{% </anima> %}
 
 ```sh
 $ cargo run --release -- puzzles/u_turn.txt
@@ -355,7 +357,7 @@ Down, Down, Left, Left, Up, Up
 
 Awesome, it got that one too! One more, this one's really more of the same:
 
-{% anima() %}
+{% <anima> %}
 {
     "name": "Spiral",
     "width": 5,
@@ -376,7 +378,7 @@ Awesome, it got that one too! One more, this one's really more of the same:
     ],
     "optimalMoves": 16
 }
-{% end %}
+{% </anima> %}
 
 ```sh
 $ cargo run --release -- puzzles/spiral.txt
@@ -502,13 +504,13 @@ pub struct State {
 
 So imagine a board with a few red actors on it. Let's say four, labeled A, B, C, and D:
 
-{% center() %}
+{% <center> %}
 | | | |
 |---|---|---|
 | A | _ | B |
 | _ | _ | _ |
 | C | _ | D |
-{% end %}
+{% </center> %}
 
 With these four actors, there's actually `4!` ways we could represent the state since there are `4!`
 permutations of the actors in the vector. We can fix this by sorting our `actors` array. This will
@@ -571,7 +573,7 @@ function should be *easy to compute* and return an estimate that is *as high as 
 overestimating. This is a tradeoff that we actively have to be conscious of. In most cases, it will
 be a net positive. Let's think about what heuristics we can calculate for our puzzle:
 
-{% anima() %}
+{% <anima> %}
 {
     "name": "Square Dance",
     "width": 5,
@@ -607,7 +609,7 @@ be a net positive. Let's think about what heuristics we can calculate for our pu
     ],
     "optimalMoves": 12
 }
-{% end %}
+{% </anima> %}
 
 In order to complete the puzzle, each goal needs one actor of its color on top of it. Since all the
 actors move at the same time, we can use a straightforward *maxmin*: Find the nearest actor to each
@@ -789,7 +791,8 @@ We're out of low-hanging fruit, so let's move on to doing some micro-optimizatio
 plenty to be gained here though, and we can find it by doing some profiling. Running our benchmarks
 in Visual Studio gets us some interesting insights:
 
-{{ resize_image(path="/blog/intelligent-brute-forcing/profile.png", width=800, height=800, op="fit_width") }}
+{% set image = resize_image(path="/blog/intelligent-brute-forcing/profile.png", width=800, height=800, op="fit_width") %}
+<img src="{{ image.url }}" />
 
 Here they are typed out:
 
@@ -942,7 +945,7 @@ it out! You can also write, import, and share your own puzzles.
 
 Thanks for reading, and happy solving!
 
-{% anima(controls=true) %}
+{% <anima controls={true}> %}
 {
     "name": "Box Step",
     "width": 5,
@@ -976,4 +979,4 @@ Thanks for reading, and happy solving!
     ],
     "optimalMoves": 15
 }
-{% end %}
+{% </anima> %}

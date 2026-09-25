@@ -10,7 +10,7 @@
 <div class="section pages">
     <h1>Latest Blog Posts</h1>
     {% set blog_section = get_section(path="blog/_index.md") %}
-    {% for page in blog_section.pages | slice(end=5) %}
+    {% for page in blog_section.pages[:5] %}
         <div class="page">
             <a href="{{ page.permalink | safe}}">{{ page.title }}</a>
             <div class="info">

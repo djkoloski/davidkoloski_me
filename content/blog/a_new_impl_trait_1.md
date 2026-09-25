@@ -97,7 +97,9 @@ fn target() -> Target<&'static str> {
 }
 ```
 
-This desugaring has a special property: the return type `&'static str` gets _abstracted_ behind an opaque `Target<T>` wrapper. That lets `target` limit what properties of its return type a caller is allowed to rely on. In this case, the `Target` type proxies the `Debug` impl but _only_ the `Debug` impl. Any other traits implemented by the wrapped `T` are _not_ implemented by `Target<T>`{{ citation() }}. Let's look at a more complex example to see how this affects composability:
+This desugaring has a special property: the return type `&'static str` gets _abstracted_ behind an opaque `Target<T>` wrapper. That lets `target` limit what properties of its return type a caller is allowed to rely on. In this case, the `Target` type proxies the `Debug` impl but _only_ the `Debug` impl. Any other traits implemented by the wrapped `T` are _not_ implemented by `Target<T>`[^1]. Let's look at a more complex example to see how this affects composability:
+
+[^1]: `impl Trait` actually _does_ leak some traits, specifically [auto traits](https://doc.rust-lang.org/beta/unstable-book/language-features/auto-traits.html). Auto traits are automatically implemented for types based on their compositions, so the `Target` struct in our example will implement them if `T` does. This has led to a [now-famous tweet](https://twitter.com/Gankra_/status/1141409682017308672). I'd like to add that `impl Trait` also leaks `Unpin` because it is an auto trait like `Send` and `Sync`.
 
 ```rust
 fn combine<T: Add>(lhs: T, rhs: T) -> T::Output {
@@ -366,7 +368,7 @@ impl Miner for Quarry {
 
 If `Ore` is implemented for the unit type `()`, then our code will compile fine but do the wrong thing. We won't know about it until runtime, if we even catch it. Additionally, it's important to note that we would have avoided this if we specified `type Mine = Bauxite` instead of using `impl Trait`.
 
-This is a specific case, but with more complex expressions we can cause much sneakier issues{{ citation() }}. This issue can occur anywhere that infer the return types of functions, and is really a problem with return position `impl Trait` as a whole. What we're doing here is allowing these issues to creep into new places in the language as well, increasing the odds that we'll accidentally stumble across it.
+This is a specific case, but with more complex expressions we can cause much [sneakier issues](#addendum-sneakier-issues). This issue can occur anywhere that infer the return types of functions, and is really a problem with return position `impl Trait` as a whole. What we're doing here is allowing these issues to creep into new places in the language as well, increasing the odds that we'll accidentally stumble across it.
 
 ### Meta: who cares?
 
@@ -380,11 +382,8 @@ I don't think we have to choose between having footguns and being able to use `i
 
 Alright, so we've got some problems. In [part 2](@/blog/a_new_impl_trait_2.md), I'll describe one possible solution to this problem that allows us to have both consistency and flexibility.
 
-{% footnote() %}
-`impl Trait` actually _does_ leak some traits, specifically [auto traits](https://doc.rust-lang.org/beta/unstable-book/language-features/auto-traits.html). Auto traits are automatically implemented for types based on their compositions, so the `Target` struct in our example will implement them if `T` does. This has led to a [now-famous tweet](https://twitter.com/Gankra_/status/1141409682017308672). I'd like to add that `impl Trait` also leaks `Unpin` because it is an auto trait like `Send` and `Sync`.
-{% end %}
+## Addendum: Sneakier Issues
 
-{% footnote() %}
 Consider this code that uses TAIT and GATs:
 
 ```rust
@@ -473,4 +472,3 @@ fn main() {
 ```
 
 In this case it's only for free functions, and you'd probably find the presence of `impl Ore + '_` a bit more suspicious. What TAIT does is allow this problem cross the trait boundary. Traits are no longer safe from this mistake because this is really a problem with return position `impl Trait` and TAIT enables return position `impl Trait` in traits.
-{% end %}

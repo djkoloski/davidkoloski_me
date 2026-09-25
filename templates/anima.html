@@ -1,0 +1,11 @@
+{% component anima(scale = 50, controls = false, dynamic = false) %}
+<script
+    class="anima-data"
+    type="application/json"
+    data-scale="{{ scale }}"
+    data-controls="{{ controls }}"
+    data-dynamic="{{ dynamic }}"
+>
+    {{ body | safe }}
+</script>
+{% endcomponent %}
